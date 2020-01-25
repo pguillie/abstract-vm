@@ -3,6 +3,15 @@ NAME = avm
 CXX = g++
 CXXFLAGS = -Wall -Werror -Wextra
 
+headers =					\
+	$(addprefix parser/,			\
+		Parser.hpp			\
+		Lexer.hpp			\
+		Token.hpp			\
+	)					\
+	IOperand.hpp				\
+	Operand.hpp				\
+
 sources =					\
 	main.cpp				\
 	parse.cpp				\
@@ -10,14 +19,8 @@ sources =					\
 		Parser.cpp			\
 		Lexer.cpp			\
 		Token.cpp			\
-	)
-
-headers =					\
-	$(addprefix parser/,			\
-		Parser.hpp			\
-		Lexer.hpp			\
-		Token.hpp			\
-	)
+	)					\
+	OperandFactory.cpp			\
 
 objects = $(sources:%.cpp=%.o)
 
@@ -26,12 +29,12 @@ all: $(NAME)
 $(NAME): $(objects)
 	$(CXX) -o $@ $^
 
-$(objects): $(headers)
+$(objects): Makefile $(headers)
 
 clean:
 	$(RM) $(objects)
 
 fclean:
-	$(RM) $(objects) $(NAME)
+	$(RM) $(NAME) $(objects)
 
 re: fclean all
