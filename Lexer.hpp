@@ -5,9 +5,15 @@
 #include <istream>
 #include <fstream>
 #include <string>
+#include <map>
 
 enum token_type {
-	WORD,
+	INSTR_0,
+	INSTR_1,
+	N_VALUE,
+	Z_VALUE,
+	LPAREN,
+	RPAREN,
 	SEP,
 	COMMENT,
 	END,
@@ -53,40 +59,92 @@ public:
 	Token const get_token(void);
 
 private:
-	std::string word();
+	Token keyword();
+	Token number();
 	std::string comment();
 
 	std::ifstream & input;
+	static std::map<std::string, enum token_type> const keywords;
 };
 
-std::string Lexer::word() {
-	std::string w;
+std::map<std::string, enum token_type> const Lexer::keywords = {
+	{"push", INSTR_1},
+	{"pop", INSTR_0},
+	{"dump", INSTR_0},
+	{"assert", INSTR_1},
+	{"add", INSTR_0},
+	{"sub", INSTR_0},
+	{"mul", INSTR_0},
+	{"div", INSTR_0},
+	{"mod", INSTR_0},
+	{"print", INSTR_0},
+	{"exit", INSTR_0},
+	{"int8", N_VALUE},
+	{"int16", N_VALUE},
+	{"int32", N_VALUE},
+	{"float", Z_VALUE},
+	{"double", Z_VALUE}
+};
+
+Token Lexer::keyword() {
+	std::string s;
+	char c;
+	std::map<std::string, enum token_type>::const_iterator i;
+
+	while (input.get(c) && (std::isalpha(c) || std::isdigit(c)))
+		s += c;
+	input.unget();
+	i = keywords.find(s);
+	if (i == keywords.end())
+		return Token(EOI, "Error: invalid instruction");
+	return Token(i->second, i->first);
+}
+
+//////////////////////////// not done
+Token Lexer::number() {
+	Token t;
 	char c;
 
-	while (input.get(c) and (std::isalpha(c)
-			or std::isdigit(c)
-			or c == '(' or c == ')' or c == '.'))
-		w += c;
-	return w;
+	t.value += input.get(c);
+	while (std::isdigit(input.get(c)))
+		t.value += c;
+	if (c == '.') {
+		t.type = FLOATING;
+		while (std::isdigit(input.get(c)))
+			t.value += c;
+	}
+	input.unget();
 }
 
 std::string Lexer::comment() {
 	std::string s;
 	char c;
 
-	while (input.get(c) and c != '\n')
+	while (input.get(c) && c != '\n')
 		s += c;
+	input.unget();
 	return s;
 }
 
 Token const Lexer::get_token() {
 	char c;
 
-	c = input.peek();
+	while (input.get(c) && std::isblank(c))
+		;
+//	if (c != EOF)
+		input.unget();
 	if (c == EOF) {
 		return Token(EOI, "");
 	} else if (std::isalpha(c)) {
-		return Token(WORD, word());
+		return keyword();
+	} else if (std::isdigit(c) || c == '-' || c == '+') {
+		return number();
+	} else if (c == '(') {
+		input.seekg(1, input.cur);
+		return Token(LPAREN, "(");
+	} else if (c == ')') {
+		input.seekg(1, input.cur);
+		return Token(RPAREN, ")");
 	} else if (c == '\n') {
 		input.seekg(1, input.cur);
 		return Token(SEP, "\n");
