@@ -10,8 +10,10 @@
 enum token_type {
 	INSTR_0,
 	INSTR_1,
-	N_VALUE,
-	Z_VALUE,
+	TYPE_INT,
+	TYPE_DEC,
+	INTEGER,
+	DECIMAL,
 	LPAREN,
 	RPAREN,
 	SEP,
@@ -79,11 +81,11 @@ std::map<std::string, enum token_type> const Lexer::keywords = {
 	{"mod", INSTR_0},
 	{"print", INSTR_0},
 	{"exit", INSTR_0},
-	{"int8", N_VALUE},
-	{"int16", N_VALUE},
-	{"int32", N_VALUE},
-	{"float", Z_VALUE},
-	{"double", Z_VALUE}
+	{"int8", TYPE_INT},
+	{"int16", TYPE_INT},
+	{"int32", TYPE_INT},
+	{"float", TYPE_DEC},
+	{"double", TYPE_DEC}
 };
 
 Token Lexer::keyword() {
@@ -100,20 +102,25 @@ Token Lexer::keyword() {
 	return Token(i->second, i->first);
 }
 
-//////////////////////////// not done
 Token Lexer::number() {
-	Token t;
+	enum token_type t;
+	std::string s;
 	char c;
 
-	t.value += input.get(c);
-	while (std::isdigit(input.get(c)))
-		t.value += c;
-	if (c == '.') {
-		t.type = FLOATING;
-		while (std::isdigit(input.get(c)))
-			t.value += c;
+	t = INTEGER;
+	input.get(c);
+	s += c;
+	while (input.get(c)) {
+		if (c == '.' && t != DECIMAL)
+			t = DECIMAL;
+		else if (std::isdigit(c))
+			;
+		else
+			break;
+		s += c;
 	}
 	input.unget();
+	return Token(t, s);
 }
 
 std::string Lexer::comment() {
@@ -137,7 +144,7 @@ Token const Lexer::get_token() {
 		return Token(EOI, "");
 	} else if (std::isalpha(c)) {
 		return keyword();
-	} else if (std::isdigit(c) || c == '-' || c == '+') {
+	} else if (std::isdigit(c) || c == '-') {
 		return number();
 	} else if (c == '(') {
 		input.seekg(1, input.cur);
@@ -151,7 +158,7 @@ Token const Lexer::get_token() {
 	} else if (c == ';') {
 		return Token(COMMENT, comment());
 	} else {
-		std::cerr << "Error: Invalid char -- '" << c << "'\n";
+		std::cerr << "Error: Invalid char -- '" << c << "' (" << int(c) << ")\n";
 		return Token(EOI, "Error");
 	}
 }

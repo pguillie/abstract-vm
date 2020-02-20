@@ -1,28 +1,36 @@
-PROGRAM : INSTR [SEP INSTR]* #
+program = instr_list #
 
-INSTR : push VALUE
-      | pop
-      | dump
-      | assert VALUE
-      | add
-      | sub
-      | mul
-      | div
-      | mod
-      | print
-      | exit
+instr_list = instr_line
+	   | instr_line sep instr_list
 
-VALUE : int8(N)
-      | int16(N)
-      | int32(N)
-      | float(Z)
-      | double(Z)
+instr_line = instr
+	   | instr comment
+	   | comment
 
-N : [-]?[0..9]+
-Z : [-]?[0..9]+.[0..9]+
+instr = "push" value
+      | "pop"
+      | "dump"
+      | "assert" value
+      | "add"
+      | "sub"
+      | "mul"
+      | "div"
+      | "mod"
+      | "print"
+      | "exitl"
 
-SEP : [COMMENT]? '\n'+
+value = "int8" '(' integer ')'
+      | "int16" '(' integer ')'
+      | "int32" '(' integer ')'
+      | "float" '(' decimal ')'
+      | "double" '(' decimal ')'
 
-COMMENT : ; [^'\n']*
+integer = MINUS? DIGIT+
 
-# : ;; | EOF
+decimal = MINUS? DIGIT+ DOT DIGIT+
+
+sep = NEWLINE+
+
+comment = SEMICOLON [^NEWLINE]*
+
+# = EOF
