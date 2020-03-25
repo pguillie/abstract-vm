@@ -5,27 +5,32 @@
 
 using namespace std;
 
-void show(std::ifstream & input) {
+void show(istream & input) {
 	Lexer lexer(input);
 	Token tok;
 
 	do {
-		tok = lexer.get_token();
+		tok = lexer.getNextToken();
 		cout << tok << endl;
-	} while (tok.getType() != EOI);
+	} while (tok.getType() != Token::Type::end);
 }
 
 int main(int argc, char * argv[]) {
-	ifstream source;
+	ifstream in;
+//	string source;
 
 	if (argc != 2) {
 		cerr << "Usage: " << argv[0] << " <file>" << endl;
 		return 1;
 	}
-	source.open(argv[1]);
-	if (source.is_open()) {
-		show(source);
-		source.close();
+	in.open(argv[1]);
+	if (in.is_open()) {
+		// in.seekg(0, std::ios::end);
+		// source.resize(in.tellg());
+		// in.seekg(0, std::ios::beg);
+		// in.read(&source[0], source.size());
+		show(in);
+		in.close();
 	}
 	return 0;
 }

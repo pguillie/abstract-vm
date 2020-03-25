@@ -1,35 +1,38 @@
-program = instr_list #
+program = instruction_list #
 
-instr_list = instr_line
-	   | instr_line sep instr_list
+instruction_list = instruction_line
+		 | instruction_line sep+ instruction_list
 
-instr_line = instr
-	   | instr comment
-	   | comment
+instruction_line = instruction? comment?
 
-instr = "push" value
-      | "pop"
-      | "dump"
-      | "assert" value
-      | "add"
-      | "sub"
-      | "mul"
-      | "div"
-      | "mod"
-      | "print"
-      | "exitl"
+instruction = instr0
+	    | instr1 operand
 
-value = "int8" '(' integer ')'
-      | "int16" '(' integer ')'
-      | "int32" '(' integer ')'
-      | "float" '(' decimal ')'
-      | "double" '(' decimal ')'
+instr0 = "pop"
+       | "dump"
+       | "add"
+       | "sub"
+       | "mul"
+       | "div"
+       | "mod"
+       | "print"
+       | "exit"
 
-integer = MINUS? DIGIT+
+instr1 = "push"
+       | "assert"
 
-decimal = MINUS? DIGIT+ DOT DIGIT+
+operand = int_type LPAREN int_value RPAREN
+	| dec_type LPAREN dec_value RPAREN
 
-sep = NEWLINE+
+int_type = "int8" | "int16" | "int32"
+
+dec_type = "float" | "double"
+
+int_value = MINUS? DIGIT+
+
+dec_value = MINUS? DIGIT+ DOT DIGIT*
+
+sep = NEWLINE
 
 comment = SEMICOLON [^NEWLINE]*
 
