@@ -4,20 +4,25 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <exception>
 
 #include "Token.hpp"
 
 class Lexer {
 public:
+	Lexer();
 	Lexer(std::istream & input);
-	virtual ~Lexer(void) {};
+	virtual ~Lexer() {};
 
-	Token const getNextToken(void);
+	Token const getNextToken();
 
 private:
-	Token const keyword(void);
-	Token const value(void);
-	Token const comment(void);
+	Lexer(Lexer const & other);
+	Lexer & operator=(Lexer const & rhs);
+
+	Token const keyword();
+	Token const value();
+	Token const comment();
 
 	std::istream & input;
 	static std::map<std::string, Token::Type> const keywords;

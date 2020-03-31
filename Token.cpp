@@ -1,10 +1,12 @@
 #include "Token.hpp"
 
-Token::Token(void): type(Token::Type::end) {}
-Token::Token(enum Token::Type type):
-	type(type), index(-1), length(-1) {}
 Token::Token(enum Token::Type type, int index, int length):
-	type(type), index(index), length(length) {}
+	type(type), index(index), length(length) {
+}
+
+Token::Token(Token const & other):
+	type(other.type), index(other.index), length(other.length) {
+}
 
 Token & Token::operator=(Token const & t) {
 	type = t.type;
@@ -44,4 +46,18 @@ std::ostream & operator<<(std::ostream & os, Token const & t) {
 		type = "end";
 	os << "Token (" << type << ")";
 	return os;
+}
+
+// Exceptions
+
+Token::bad_token::bad_token(int index, int length):
+	index(index), length(length) {
+}
+
+Token::bad_token::bad_token(Token::bad_token const & other):
+	index(other.index), length(other.length) {
+}
+
+const char * Token::bad_token::what() const throw() {
+	return "Invalid token";
 }

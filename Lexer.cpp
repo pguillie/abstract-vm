@@ -1,8 +1,12 @@
 #include "Lexer.hpp"
 
-Lexer::Lexer(std::istream & input): input(input) {}
+Lexer::Lexer(): input(std::cin) {
+}
 
-Token const Lexer::getNextToken(void) {
+Lexer::Lexer(std::istream & input): input(input) {
+}
+
+Token const Lexer::getNextToken() {
 	char c;
 
 	while (std::isblank(input.peek()))
@@ -25,33 +29,12 @@ Token const Lexer::getNextToken(void) {
 	}
 	if (std::isalpha(c))
 		return keyword();
-	if (std::isdigit(c) || c == '-')
+	if (std::isdigit(c) || c == '-' || c == '.')
 		return value();
-	//exception
-	return Token(Token::Type::comment);
-
-	// while (input.get(c)) {
-	// 	if (std::isblank(c))
-	// 		continue;
-	// 	if (std::isalpha(c))
-	// 		return keyword();
-	// 	if (std::isdigit(c) || c == '-')
-	// 		return value();
-	// 	if (c == '(')
-	// 		return Token(Token::Type::lparen);
-	// 	if (c == ')')
-	// 		return Token(Token::Type::rparen);
-	// 	if (c == '\n')
-	// 		return Token(Token::Type::sep);
-	// 	if (c == ';')
-	// 		return comment();
-	// 	//exception
-	// 	return Token(Token::Type::comment);
-	// }
-	// return Token(Token::Type::end);
+	throw Token::bad_token(input.tellg());
 }
 
-Token const Lexer::keyword(void) {
+Token const Lexer::keyword() {
 	std::map<std::string, Token::Type>::const_iterator i;
 	std::string word;
 	int index = input.tellg();
@@ -59,38 +42,42 @@ Token const Lexer::keyword(void) {
 	while (std::isalnum(input.peek()))
 		word += input.get();
 	i = keywords.find(word);
-	if (i == keywords.end()) // exception
-		return Token();
+	if (i == keywords.end())
+		throw Token::bad_token(index, word.length());
 	return Token(i->second, index, word.length());
 }
 
-Token const Lexer::value(void) {
+Token const Lexer::value() {
 	int index = input.tellg();
-	bool digit= (std::isdigit(input.peek())) ? 1 : 0;
-	bool dot = 0;
+	int digit = 0;
+	Token::Type t;
 	char c;
 
-	while (input.get(c)) {
-		if (std::isdigit(c))
-			digit = 1;
-		else if (c == '.' && !dot)
-			dot = 1;
-		else
-			break;
+	if (input.peek() == '-')
+		input.ignore();
+	while (input.get(c) && std::isdigit(c))
+		digit++;
+	if (c != '.') {
+		t = Token::Type::int_value;
+	} else {
+		t = Token::Type::dec_value;
+		while (std::isdigit(input.get()))
+			digit++;
 	}
-	if (!digit) // exception
-		return Token();
 	input.unget();
-	return Token(dot ? Token::Type::dec_value : Token::Type::int_value,
-		index, (int)input.tellg() - index);
+	if (!digit)
+		throw Token::bad_token(index, (int)input.tellg() - index);
+	return Token(t, index, (int)input.tellg() - index);
 }
 
-Token const Lexer::comment(void) {
+Token const Lexer::comment() {
 	int index = input.tellg();
 
 	input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	return Token(Token::Type::comment, index, (int)input.tellg() - index);
 }
+
+// Static member variables
 
 std::map<std::string, Token::Type> const Lexer::keywords = {
 	{"push", Token::Type::instr1},
