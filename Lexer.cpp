@@ -1,99 +1,118 @@
 #include "Lexer.hpp"
 
-Lexer::Lexer(): input(std::cin) {
-}
+Lexer::Lexer(std::istream & input):
+	source_(input)
+{ }
 
-Lexer::Lexer(std::istream & input): input(input) {
-}
+// Lexer::Lexer(char const * file) {
+// 	if (file) {
+// 		fs_.open(file);
+// 		input_ = &fs_;
+// 	} else {
+// 		std::string line;
+// 	        while (getline(std::cin, line)) {
+// 			if (line == ";;")
+// 				break;
+// 			ss_ << line << std::endl;
+// 		}
+// 		ss_.seekg(0, ss_.beg);
+// 		input_ = &ss_;
+// 	}
+// }
 
-Token const Lexer::getNextToken() {
+// Lexer::~Lexer() {
+// 	if (fs_.is_open())
+// 		fs_.close();
+// }
+
+Token const Lexer::get() {
 	char c;
 
-	while (std::isblank(input.peek()))
-		input.ignore();
-	c = input.peek();
+	while (std::isblank(source_.peek()))
+		source_.ignore();
+	c = source_.peek();
 	switch (c) {
 	case EOF:
 		return Token(Token::Type::end);
 	case '(':
-		input.ignore();
+		source_.ignore();
 		return Token(Token::Type::lparen);
 	case ')':
-		input.ignore();
+		source_.ignore();
 		return Token(Token::Type::rparen);
 	case '\n':
-		input.ignore();
+		source_.ignore();
 		return Token(Token::Type::sep);
 	case ';':
 		return comment();
 	}
 	if (std::isalpha(c))
-		return keyword();
+		return word();
 	if (std::isdigit(c) || c == '-' || c == '.')
-		return value();
-	throw Token::bad_token(input.tellg());
+		return number();
+	throw Token::bad_token(source_.tellg());
 }
 
-Token const Lexer::keyword() {
+Token const Lexer::word() {
 	std::map<std::string, Token::Type>::const_iterator i;
-	std::string word;
-	int index = input.tellg();
+	std::string w;
+	int index = source_.tellg();
 
-	while (std::isalnum(input.peek()))
-		word += input.get();
-	i = keywords.find(word);
-	if (i == keywords.end())
-		throw Token::bad_token(index, word.length());
-	return Token(i->second, index, word.length());
+	while (std::isalnum(source_.peek()))
+		w += source_.get();
+	i = keywords_.find(w);
+	if (i == keywords_.end())
+		throw Token::bad_token(index, w.length());
+	return Token(i->second, index, w.length());
 }
 
-Token const Lexer::value() {
-	int index = input.tellg();
+Token const Lexer::number() {
+	int index = source_.tellg();
 	int digit = 0;
-	Token::Type t;
+	Token::Type type;
 	char c;
 
-	if (input.peek() == '-')
-		input.ignore();
-	while (input.get(c) && std::isdigit(c))
+	if (source_.peek() == '-')
+		source_.ignore();
+	while (source_.get(c) && std::isdigit(c))
 		digit++;
 	if (c != '.') {
-		t = Token::Type::int_value;
+		type = Token::Type::integer;
 	} else {
-		t = Token::Type::dec_value;
-		while (std::isdigit(input.get()))
+		type = Token::Type::decimal;
+		while (std::isdigit(source_.get()))
 			digit++;
 	}
-	input.unget();
+	source_.unget();
 	if (!digit)
-		throw Token::bad_token(index, (int)input.tellg() - index);
-	return Token(t, index, (int)input.tellg() - index);
+		throw Token::bad_token(index, (int)source_.tellg() - index);
+	return Token(type, index, (int)source_.tellg() - index);
 }
 
 Token const Lexer::comment() {
-	int index = input.tellg();
+	int index = source_.tellg();
 
-	input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	return Token(Token::Type::comment, index, (int)input.tellg() - index);
+	source_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	return Token(Token::Type::comment, index, (int)source_.tellg() - index);
 }
 
 // Static member variables
 
-std::map<std::string, Token::Type> const Lexer::keywords = {
-	{"push", Token::Type::instr1},
-	{"pop", Token::Type::instr0},
-	{"dump", Token::Type::instr0},
-	{"assert", Token::Type::instr1},
-	{"add", Token::Type::instr0},
-	{"sub", Token::Type::instr0},
-	{"mul", Token::Type::instr0},
-	{"div", Token::Type::instr0},
-	{"mod", Token::Type::instr0},
-	{"print", Token::Type::instr0},
-	{"exit", Token::Type::instr0},
-	{"int8", Token::Type::int_type},
-	{"int16", Token::Type::int_type},
-	{"int32", Token::Type::int_type},
-	{"float", Token::Type::dec_type},
-	{"double", Token::Type::dec_type}
+std::map<std::string, Token::Type> const Lexer::keywords_ = {
+	{"push", Token::Type::instr_1},
+	{"pop", Token::Type::instr_0},
+	{"dump", Token::Type::instr_0},
+	{"assert", Token::Type::instr_1},
+	{"add", Token::Type::instr_0},
+	{"sub", Token::Type::instr_0},
+	{"mul", Token::Type::instr_0},
+	{"div", Token::Type::instr_0},
+	{"mod", Token::Type::instr_0},
+	{"print", Token::Type::instr_0},
+	{"exit", Token::Type::instr_0},
+	{"int8", Token::Type::integer_t},
+	{"int16", Token::Type::integer_t},
+	{"int32", Token::Type::integer_t},
+	{"float", Token::Type::decimal_t},
+	{"double", Token::Type::decimal_t}
 };
