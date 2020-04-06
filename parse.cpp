@@ -5,7 +5,7 @@
 void parse(std::istream & input) {
 	Lexer lexer(input);
 	Parser parser(lexer);
-	std::queue<Parser::Instruction> instr;
+	std::queue<Instruction> instr;
 
 	instr = parser.parse();
 	while (!instr.empty())

@@ -4,53 +4,29 @@ Lexer::Lexer(std::istream & input):
 	source_(input)
 { }
 
-// Lexer::Lexer(char const * file) {
-// 	if (file) {
-// 		fs_.open(file);
-// 		input_ = &fs_;
-// 	} else {
-// 		std::string line;
-// 	        while (getline(std::cin, line)) {
-// 			if (line == ";;")
-// 				break;
-// 			ss_ << line << std::endl;
-// 		}
-// 		ss_.seekg(0, ss_.beg);
-// 		input_ = &ss_;
-// 	}
-// }
-
-// Lexer::~Lexer() {
-// 	if (fs_.is_open())
-// 		fs_.close();
-// }
-
 Token const Lexer::get() {
 	char c;
 
 	while (std::isblank(source_.peek()))
 		source_.ignore();
 	c = source_.peek();
-	switch (c) {
-	case EOF:
-		return Token(Token::Type::end);
-	case '(':
+	if (c == EOF) {
+		return Token(Token::Type::end, (int)source_.tellg());
+	} else if (c == '(') {
 		source_.ignore();
-		return Token(Token::Type::lparen);
-	case ')':
+		return Token(Token::Type::lparen, (int)source_.tellg() - 1);
+	} else if (c == ')') {
 		source_.ignore();
-		return Token(Token::Type::rparen);
-	case '\n':
-		source_.ignore();
-		return Token(Token::Type::sep);
-	case ';':
-		return comment();
-	}
-	if (std::isalpha(c))
+		return Token(Token::Type::rparen, (int)source_.tellg() - 1);
+	} else if (c == '\n' || c == ';') {
+		source_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		return Token(Token::Type::newline, (int)source_.tellg() - 1);
+	} else if (std::isalpha(c)) {
 		return word();
-	if (std::isdigit(c) || c == '-' || c == '.')
+	} else if (std::isdigit(c) || c == '-' || c == '.') {
 		return number();
-	throw Token::bad_token(source_.tellg());
+	}
+	throw TokenError(Token(Token::Type::none, source_.tellg()));
 }
 
 Token const Lexer::word() {
@@ -62,13 +38,14 @@ Token const Lexer::word() {
 		w += source_.get();
 	i = keywords_.find(w);
 	if (i == keywords_.end())
-		throw Token::bad_token(index, w.length());
+		throw TokenError(Token(Token::Type::none, index, w.length()));
 	return Token(i->second, index, w.length());
 }
 
 Token const Lexer::number() {
 	int index = source_.tellg();
 	int digit = 0;
+	int len;
 	Token::Type type;
 	char c;
 
@@ -84,19 +61,13 @@ Token const Lexer::number() {
 			digit++;
 	}
 	source_.unget();
+	len = (int)source_.tellg() - index;
 	if (!digit)
-		throw Token::bad_token(index, (int)source_.tellg() - index);
-	return Token(type, index, (int)source_.tellg() - index);
+		throw TokenError(Token(Token::Type::none, index, len));
+	return Token(type, index, len);
 }
 
-Token const Lexer::comment() {
-	int index = source_.tellg();
-
-	source_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	return Token(Token::Type::comment, index, (int)source_.tellg() - index);
-}
-
-// Static member variables
+		    // Static member variables //
 
 std::map<std::string, Token::Type> const Lexer::keywords_ = {
 	{"push", Token::Type::instr_1},

@@ -10,22 +10,24 @@
 
 #include "Lexer.hpp"
 
+struct Instruction {
+	std::string action;
+	std::vector<std::array<std::string, 2>> value;
+};
+
 class Parser {
 public:
 	Parser(Lexer & lexer);
-	virtual ~Parser() {};
+	virtual ~Parser() { };
 	// Parser(Parser const & other) =delete;
 	// Parser & operator=(Parser const & rhs) =delete;
 
-	struct Instruction {
-		std::string name;
-		std::vector<std::array<std::string, 2>> args;
-	};
-
-	std::queue<Instruction> parse();
+	std::queue<Instruction> source();
+	Instruction instr_line();
 
 private:
 	Lexer & lexer_;
+	Token token_;
 };
 
 #endif // PARSER_H_

@@ -7,6 +7,7 @@
 #include <map>
 
 #include "Token.hpp"
+#include "TokenError.hpp"
 
 class Lexer {
 public:
@@ -30,7 +31,6 @@ private:
 
 	Token const word();
 	Token const number();
-	Token const comment();
 };
 
 #endif // LEXER_H_

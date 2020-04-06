@@ -1,39 +1,30 @@
-program = instruction_list #
+source = instr (NEWLINE+ instr)*
 
-instruction_list = instruction_line
-		 | instruction_line sep+ instruction_list
+instr = instr_0
+      | instr_1 value
 
-instruction_line = instruction? comment?
+instr_0 = "pop"
+	| "dump"
+	| "add"
+	| "sub"
+	| "mul"
+	| "div"
+	| "mod"
+	| "print"
+	| "exit"
 
-instruction = instr0
-	    | instr1 operand
+instr_1 = "push"
+	| "assert"
 
-instr0 = "pop"
-       | "dump"
-       | "add"
-       | "sub"
-       | "mul"
-       | "div"
-       | "mod"
-       | "print"
-       | "exit"
+value = integer_t LPAREN INTEGER RPAREN
+      | decimal_t LPAREN DECIMAL RPAREN
 
-instr1 = "push"
-       | "assert"
+integer_t = "int8" | "int16" | "int32"
 
-operand = int_type LPAREN int_value RPAREN
-	| dec_type LPAREN dec_value RPAREN
-
-int_type = "int8" | "int16" | "int32"
-
-dec_type = "float" | "double"
-
-int_value = MINUS? DIGIT+
-
-dec_value = MINUS? DIGIT+ DOT DIGIT*
-
-sep = NEWLINE
+decimal_t = "float" | "double"
 
 comment = SEMICOLON [^NEWLINE]*
 
-# = EOF
+// lexemes definition
+INTEGER = MINUS? DIGIT+
+DECIMAL = MINUS? ((DIGIT* DOT DIGIT+) | (DIGIT+ DOT DIGIT*))
