@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-void parse_file(char const * file);
-void parse_stdin();
+#include "Parser.hpp"
 
 int main(int argc, char * argv[]) {
 	if (argc > 2) {
@@ -10,24 +9,28 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-// parse
+	Parser parser(argv[1]);
+	std::queue<Instruction> instr;
 
-	if (argv[1])
-		parse_file(argv[1]);
-	else
-		parse_stdin();
-
-// ////////
-// 	try {
-// 		Parser p(argv[1]);
-// 	} catch (Token::bad_token const & e) {
-// 		std::cerr << e.what();
-// 		// std::cerr << "(" << e.index() << ", " << e.length() << ")\n";
-// 	} catch (std::exception const & e) {
-// 		std::cerr << "Error: something went wrong while parsing"
-// 			" source code.\n"
-// 			  << e.what();
-// 		return -1;
-// 	}
+	try {
+		instr = parser.source();
+	} catch (TokenError const & e) {
+		std::cerr<<"Caught token error:\n";
+		std::cerr << e.what() << std::endl;
+		return -1;
+	} catch (std::exception const & e) {
+		std::cerr << e.what() << "Error: something went wrong while the source code.\n";
+		return -1;
+	}
+	while (!instr.empty())
+	{
+		Instruction curr = instr.front();
+		std::cout << curr.action << ":";
+		std::vector<std::array<std::string, 2>>::iterator it;
+		for (it = curr.value.begin() ; it != curr.value.end(); ++it)
+			std::cout << it->back() << "(" << it->front() << "),";
+		std::cout << std::endl;
+		instr.pop();
+	}
 	return 0;
 }

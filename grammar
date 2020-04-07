@@ -1,4 +1,5 @@
-source = instr (NEWLINE+ instr)*
+//source = instr (NEWLINE+ instr)*
+source = (instr NEWLINE+)*
 
 instr = instr_0
       | instr_1 value
@@ -23,8 +24,8 @@ integer_t = "int8" | "int16" | "int32"
 
 decimal_t = "float" | "double"
 
-comment = SEMICOLON [^NEWLINE]*
-
 // lexemes definition
 INTEGER = MINUS? DIGIT+
 DECIMAL = MINUS? ((DIGIT* DOT DIGIT+) | (DIGIT+ DOT DIGIT*))
+
+COMMENT = SEMICOLON [^NEWLINE]*

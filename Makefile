@@ -8,12 +8,13 @@ sources = \
 	Parser.cpp \
 	Lexer.cpp \
 	Token.cpp \
-	parse.cpp \
+	TokenError.cpp \
 
 headers = \
 	Parser.hpp \
 	Lexer.hpp \
 	Token.hpp \
+	TokenError.hpp \
 
 objects = $(sources:%.cpp=%.o)
 

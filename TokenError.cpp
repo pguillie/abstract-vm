@@ -9,5 +9,6 @@ const char * TokenError::what() const throw() {
 	std::stringstream msg;
 
 	msg << "Invalid token (" << err_.index_ << ", " << err_.length_ << ")";
-	return msg.str().c_str();
+	std::string * tmp = new std::string(msg.str());
+	return tmp->c_str();
 }

@@ -8,6 +8,7 @@
 #include <array>
 #include <string>
 
+#include "Token.hpp"
 #include "Lexer.hpp"
 
 struct Instruction {
@@ -17,16 +18,21 @@ struct Instruction {
 
 class Parser {
 public:
-	Parser(Lexer & lexer);
-	virtual ~Parser() { };
+	Parser(char const * file);
+	virtual ~Parser();
 	// Parser(Parser const & other) =delete;
 	// Parser & operator=(Parser const & rhs) =delete;
 
 	std::queue<Instruction> source();
-	Instruction instr_line();
 
 private:
-	Lexer & lexer_;
+	bool verify(Token::Type type); // get next token if types match
+	void assert(Token::Type type); // same but raise an exception in case they don't
+	Instruction instr();
+	std::array<std::string, 2> value();
+
+	std::stringstream source_;
+	Lexer * lexer_;
 	Token token_;
 };
 

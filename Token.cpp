@@ -3,8 +3,16 @@
 Token::Token(enum Token::Type type, int index, int length):
 	type_(type), index_(index), length_(length) { }
 
-enum Token::Type Token::type(void) {
+enum Token::Type Token::type() {
 	return type_;
+}
+
+int Token::index() {
+	return index_;
+}
+
+int Token::length() {
+	return length_;
 }
 
 //tmp
