@@ -7,6 +7,7 @@ Parser::Parser(char const * file) {
 			source_ << ifs.rdbuf();
 			ifs.close();
 		}
+		file_ = file;
 	} else {
 		std::string line;
 		while (getline(std::cin, line)) {
@@ -15,26 +16,22 @@ Parser::Parser(char const * file) {
 			source_ << line << std::endl;
 		}
 		source_.seekg(0, source_.beg);
+		file_ = "stdin";
 	}
-	lexer_ = new Lexer(source_);
-	token_ = lexer_->get();
-}
-
-Parser::~Parser() {
-	delete lexer_;
+	token_ = Lexer::get(source_);
 }
 
 bool Parser::verify(Token::Type type) {
 	if (token_.type() != type)
 		return false;
-	token_ = lexer_->get();
+	token_ = Lexer::get(source_);
 	return true;
 }
 
 void Parser::assert(Token::Type type) {
 	if (token_.type() != type)
 		throw TokenError(token_);
-	token_ = lexer_->get();
+	token_ = Lexer::get(source_);
 }
 
 std::queue<Instruction> Parser::source() {
@@ -89,4 +86,22 @@ std::array<std::string, 2> Parser::value() {
 	val.at(0) = source_.str().substr(val_type.index(), val_type.length());
 	val.at(1) = source_.str().substr(num.index(), num.length());
 	return val;
+}
+
+void Parser::error(TokenError const & e) {
+	std::string line;
+	int l = 0;
+	int beg;
+
+	source_.seekg(0, source_.beg);
+	do {
+		beg = source_.tellg();
+		getline(source_, line);
+		l++;
+	} while (source_.tellg() < e.err_.index() + 1);
+	std::cerr << file_ << ", line " << l << ": error: " << e.what() << std::endl;
+	std::cerr << " " << line << "\n";
+	std::cerr << " " << std::string(e.err_.index() - beg, ' ')
+		  << "^" << std::string(e.err_.length() - 1, '~')
+		  << std::endl;
 }

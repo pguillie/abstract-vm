@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <queue>
 #include <array>
@@ -19,11 +20,13 @@ struct Instruction {
 class Parser {
 public:
 	Parser(char const * file);
-	virtual ~Parser();
+	virtual ~Parser() { };
 	// Parser(Parser const & other) =delete;
 	// Parser & operator=(Parser const & rhs) =delete;
 
 	std::queue<Instruction> source();
+
+	void error(TokenError const & e);
 
 private:
 	bool verify(Token::Type type); // get next token if types match
@@ -31,8 +34,8 @@ private:
 	Instruction instr();
 	std::array<std::string, 2> value();
 
+	std::string file_;
 	std::stringstream source_;
-	Lexer * lexer_;
 	Token token_;
 };
 

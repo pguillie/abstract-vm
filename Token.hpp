@@ -20,9 +20,9 @@ public:
 	// Token(Token && move) =delete;
 	// Token & operator=(Token && copy) =delete;
 
-	enum Type type();
-	int index();
-	int length();
+	enum Type type() const;
+	int index() const;
+	int length() const;
 
 	//tmp
 	friend std::ostream & operator<<(std::ostream & os, Token const & token);

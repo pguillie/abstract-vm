@@ -1,89 +1,64 @@
 #include "Lexer.hpp"
 
-Lexer::Lexer(std::istream & input):
-	source_(input)
-{ }
-
-Token const Lexer::get() {
-	char c;
-
-	while (std::isblank(source_.peek()))
-		source_.ignore();
-	c = source_.peek();
-	if (c == EOF) {
-		return Token(Token::Type::end, (int)source_.tellg());
-	} else if (c == '(') {
-		source_.ignore();
-		return Token(Token::Type::lparen, (int)source_.tellg() - 1);
-	} else if (c == ')') {
-		source_.ignore();
-		return Token(Token::Type::rparen, (int)source_.tellg() - 1);
-	} else if (c == '\n' || c == ';') {
-		source_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		return Token(Token::Type::newline, (int)source_.tellg() - 1);
-	} else if (std::isalpha(c)) {
-		return word();
-	} else if (std::isdigit(c) || c == '-' || c == '.') {
-		return number();
-	}
-	throw TokenError(Token(Token::Type::none, source_.tellg()));
-}
-
-Token const Lexer::word() {
+static Token const word(std::istream & source) {
 	std::map<std::string, Token::Type>::const_iterator i;
 	std::string w;
-	int index = source_.tellg();
+	int index = source.tellg();
 
-	while (std::isalnum(source_.peek()))
-		w += source_.get();
-	i = keywords_.find(w);
-	if (i == keywords_.end())
+	while (std::isalnum(source.peek()))
+		w += source.get();
+	i = Lexer::keywords.find(w);
+	if (i == Lexer::keywords.end())
 		throw TokenError(Token(Token::Type::none, index, w.length()));
 	return Token(i->second, index, w.length());
 }
 
-Token const Lexer::number() {
-	int index = source_.tellg();
+static Token const number(std::istream & source) {
+	int index = source.tellg();
 	int digit = 0;
 	int len;
 	Token::Type type;
 	char c;
 
-	if (source_.peek() == '-')
-		source_.ignore();
-	while (source_.get(c) && std::isdigit(c))
+	if (source.peek() == '-')
+		source.ignore();
+	while (source.get(c) && std::isdigit(c))
 		digit++;
 	if (c != '.') {
 		type = Token::Type::integer;
 	} else {
 		type = Token::Type::decimal;
-		while (std::isdigit(source_.get()))
+		while (std::isdigit(source.get()))
 			digit++;
 	}
-	source_.unget();
-	len = (int)source_.tellg() - index;
+	source.unget();
+	len = (int)source.tellg() - index;
 	if (!digit)
 		throw TokenError(Token(Token::Type::none, index, len));
 	return Token(type, index, len);
 }
 
-		    // Static member variables //
+Token const Lexer::get(std::istream & source) {
+	char c;
 
-std::map<std::string, Token::Type> const Lexer::keywords_ = {
-	{"push", Token::Type::instr_1},
-	{"pop", Token::Type::instr_0},
-	{"dump", Token::Type::instr_0},
-	{"assert", Token::Type::instr_1},
-	{"add", Token::Type::instr_0},
-	{"sub", Token::Type::instr_0},
-	{"mul", Token::Type::instr_0},
-	{"div", Token::Type::instr_0},
-	{"mod", Token::Type::instr_0},
-	{"print", Token::Type::instr_0},
-	{"exit", Token::Type::instr_0},
-	{"int8", Token::Type::integer_t},
-	{"int16", Token::Type::integer_t},
-	{"int32", Token::Type::integer_t},
-	{"float", Token::Type::decimal_t},
-	{"double", Token::Type::decimal_t}
-};
+	while (std::isblank(source.peek()))
+		source.ignore();
+	c = source.peek();
+	if (c == EOF) {
+		return Token(Token::Type::end, (int)source.tellg());
+	} else if (c == '(') {
+		source.ignore();
+		return Token(Token::Type::lparen, (int)source.tellg() - 1);
+	} else if (c == ')') {
+		source.ignore();
+		return Token(Token::Type::rparen, (int)source.tellg() - 1);
+	} else if (c == '\n' || c == ';') {
+		source.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		return Token(Token::Type::newline, (int)source.tellg() - 1);
+	} else if (std::isalpha(c)) {
+		return word(source);
+	} else if (std::isdigit(c) || c == '-' || c == '.') {
+		return number(source);
+	}
+	throw TokenError(Token(Token::Type::none, source.tellg()));
+}

@@ -14,7 +14,6 @@ public:
 
 	virtual char const * what() const throw();
 
-private:
 	Token err_;
 	// char const * const descr_;
 };

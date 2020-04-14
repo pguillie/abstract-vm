@@ -3,15 +3,15 @@
 Token::Token(enum Token::Type type, int index, int length):
 	type_(type), index_(index), length_(length) { }
 
-enum Token::Type Token::type() {
+enum Token::Type Token::type() const {
 	return type_;
 }
 
-int Token::index() {
+int Token::index() const {
 	return index_;
 }
 
-int Token::length() {
+int Token::length() const {
 	return length_;
 }
 

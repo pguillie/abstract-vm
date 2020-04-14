@@ -9,28 +9,42 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
+	// class
 	Parser parser(argv[1]);
-	std::queue<Instruction> instr;
+	std::queue<Instruction> instructions;
 
 	try {
-		instr = parser.source();
+		instructions = parser.source();
 	} catch (TokenError const & e) {
-		std::cerr<<"Caught token error:\n";
-		std::cerr << e.what() << std::endl;
+		parser.error(e);
 		return -1;
 	} catch (std::exception const & e) {
-		std::cerr << e.what() << "Error: something went wrong while the source code.\n";
+		std::cerr << e.what() << "Error: failed to parse the source code.\n";
 		return -1;
 	}
-	while (!instr.empty())
+
+	// // namespace
+	// std::queue<Parser::Instruction> instructions;
+
+	// try {
+	// 	instructions = Parser::parse(argv[1]);
+	// } catch (TokenError const & e) {
+	// 	Parser::error(e);
+	// 	return -1;
+	// } catch (std::exception const & e) {
+	// 	std::cerr << e.what() << "Error: failed to parse source code\n.";
+	// 	return -1;
+	// }
+
+	while (!instructions.empty())
 	{
-		Instruction curr = instr.front();
-		std::cout << curr.action << ":";
+		Instruction instr = instructions.front();
+		std::cout << instr.action << ":";
 		std::vector<std::array<std::string, 2>>::iterator it;
-		for (it = curr.value.begin() ; it != curr.value.end(); ++it)
+		for (it = instr.value.begin() ; it != instr.value.end(); ++it)
 			std::cout << it->back() << "(" << it->front() << "),";
 		std::cout << std::endl;
-		instr.pop();
+		instructions.pop();
 	}
 	return 0;
 }
