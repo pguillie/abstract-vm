@@ -16,26 +16,25 @@ static Token const word(std::istream & source) {
 static Token const number(std::istream & source) {
 	int index = source.tellg();
 	int digit = 0;
+	int dot = 0;
 	int len;
-	Token::Type type;
 	char c;
 
 	if (source.peek() == '-')
 		source.ignore();
-	while (source.get(c) && std::isdigit(c))
-		digit++;
-	if (c != '.') {
-		type = Token::Type::integer;
-	} else {
-		type = Token::Type::decimal;
-		while (std::isdigit(source.get()))
+	while (source.get(c)) {
+		if (std::isdigit(c))
 			digit++;
+		else if (c == '.')
+			dot++;
+		else
+			break;
 	}
 	source.unget();
 	len = (int)source.tellg() - index;
-	if (!digit)
+	if (digit == 0 || dot > 1)
 		throw TokenError(Token(Token::Type::none, index, len));
-	return Token(type, index, len);
+	return Token(dot ? Token::Type::decimal : Token::Type::integer, index, len);
 }
 
 Token const Lexer::get(std::istream & source) {
