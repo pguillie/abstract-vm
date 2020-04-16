@@ -9,32 +9,19 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	// class
 	Parser parser(argv[1]);
 	std::queue<Instruction> instructions;
 
 	try {
 		instructions = parser.source();
-	} catch (TokenError const & e) {
-		parser.error(e);
+	} catch (TokErr const & e) {
+		parser.show(e);
 		return -1;
 	} catch (std::exception const & e) {
-		std::cerr << e.what() << "Error: failed to parse the source code.\n";
+		std::cerr << e.what()
+			  << "\nError: failed to parse the source code.\n";
 		return -1;
 	}
-
-	// // namespace
-	// std::queue<Parser::Instruction> instructions;
-
-	// try {
-	// 	instructions = Parser::parse(argv[1]);
-	// } catch (TokenError const & e) {
-	// 	Parser::error(e);
-	// 	return -1;
-	// } catch (std::exception const & e) {
-	// 	std::cerr << e.what() << "Error: failed to parse source code\n.";
-	// 	return -1;
-	// }
 
 	while (!instructions.empty())
 	{

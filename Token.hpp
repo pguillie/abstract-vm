@@ -5,32 +5,44 @@
 #include <limits>
 #include <exception>
 
+// All possible types a Token can have.
+enum class TokType {
+	instr_0, instr_1, integer_t, decimal_t, integer, decimal,
+	lparen, rparen, newline, end
+};
+
+// Interface to handle lexical errors.
+class TokErr: public virtual std::exception {
+public:
+	virtual ~TokErr(void) { }
+	virtual char const * what(void) const throw() =0;
+	virtual int line() const =0;
+	virtual int column() const =0;
+	virtual int length() const =0;
+};
+
+// A Token is the association of a portion of the source code with a type.
 class Token {
 public:
-	enum class Type {
-		instr_0, instr_1, integer_t, decimal_t, integer, decimal,
-		lparen, rparen, newline, end, none
-	};
-
-	Token() =default;
-	Token(enum Type type, int index, int length = 1);
-	virtual ~Token() { };
+	Token(void) =default;
+	Token(enum TokType type, int index, int length = 1);
+	virtual ~Token(void) { };
 	// Token(Token const & copy);
 	// Token & operator=(Token const & copy);
 	// Token(Token && move) =delete;
 	// Token & operator=(Token && copy) =delete;
 
-	enum Type type() const;
-	int index() const;
-	int length() const;
+	enum TokType type(void) const;
+	int index(void) const;
+	int length(void) const;
 
 	//tmp
 	friend std::ostream & operator<<(std::ostream & os, Token const & token);
 
-	friend class TokenError;
-
 private:
-	enum Type type_;
+	void error(void) const;
+
+	enum TokType type_;
 	int index_;
 	int length_;
 };
