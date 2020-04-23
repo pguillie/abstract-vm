@@ -15,11 +15,11 @@ int main(int argc, char * argv[]) {
 	try {
 		instructions = parser.source();
 	} catch (TokErr const & e) {
-		parser.show(e);
+		parser.printError(e);
 		return -1;
 	} catch (std::exception const & e) {
-		std::cerr << e.what()
-			  << "\nError: failed to parse the source code.\n";
+		std::cerr << e.what() << "\n"
+			  << argv[0] << ": failed to parse the source code.\n";
 		return -1;
 	}
 

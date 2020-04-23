@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include <exception>
+#include <string>
 
 // All possible types a Token can have.
 enum class TokType {
@@ -35,6 +36,8 @@ public:
 	enum TokType type(void) const;
 	int index(void) const;
 	int length(void) const;
+
+	static std::string toString(TokType type);
 
 	//tmp
 	friend std::ostream & operator<<(std::ostream & os, Token const & token);

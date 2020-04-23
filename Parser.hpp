@@ -44,7 +44,7 @@ public:
 
 	std::queue<Instruction> source();
 
-	void show(TokErr const & e);
+	void printError(TokErr const & e);
 
 private:
 	SyntaxErr error(Token token, TokType type);

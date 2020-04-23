@@ -18,7 +18,6 @@ Parser::Parser(char const * file) {
 		source_.seekg(0, source_.beg);
 		file_ = "stdin";
 	}
-	token_ = Lexer::get(source_);
 }
 
 bool Parser::verify(TokType type) {
@@ -37,14 +36,13 @@ void Parser::assert(TokType type) {
 std::queue<Instruction> Parser::source() {
 	std::queue<Instruction> instructions;
 
-	while (true) {
+	token_ = Lexer::get(source_);
+	while (token_.type() != TokType::end) {
 		while (verify(TokType::newline)) ;
-		if (verify(TokType::end))
-			break ;
-		instructions.push(instr());
-		if (verify(TokType::end))
-			break ;
-		assert(TokType::newline);
+		if (token_.type() != TokType::end)
+			instructions.push(instr());
+		if (token_.type() != TokType::end)
+			assert(TokType::newline);
 	}
 	return instructions;
 }
@@ -104,7 +102,7 @@ SyntaxErr Parser::error(Token token, TokType type) {
 	return SyntaxErr(line, col, token.length(), type, token.type(), lexeme);
 }
 
-void Parser::show(TokErr const & tok) {
+void Parser::printError(TokErr const & tok) {
 	std::string str;
 	int i;
 
@@ -122,41 +120,13 @@ void Parser::show(TokErr const & tok) {
 
 			   // Exceptions //
 
-static std::string type_to_str(TokType type) {
-	switch (type) {
-	case TokType::instr_0:
-		return "instruction";
-	case TokType::instr_1:
-		return "instruction";
-	case TokType::integer_t:
-		return "numeric type";
-	case TokType::decimal_t:
-		return "numeric type";
-	case TokType::integer:
-		return "integer value";
-	case TokType::decimal:
-		return "decimal value";
-	case TokType::lparen:
-		return "parenthese";
-	case TokType::rparen:
-		return "parenthese";
-	case TokType::newline:
-		return "newline";
-	case TokType::end:
-		return "end-of-file";
-	default:
-		return "unknown";
-	}
-}
-
 SyntaxErr::SyntaxErr(int line, int col, int len, TokType expected,
 	TokType actual, std::string str):
 	line_(line), column_(col), length_(len) {
 	std::stringstream ss;
 
 	ss << line_ << ":" << column_ << ": error: expected "
-	   << type_to_str(expected) << " before "
-	   << type_to_str(actual);
+	   << Token::toString(expected) << " before " << Token::toString(actual);
 	if (actual == TokType::instr_0 || actual == TokType::instr_1
 		|| actual == TokType::integer_t || actual == TokType::decimal_t
 		|| actual == TokType::integer || actual == TokType::decimal)
