@@ -6,7 +6,6 @@
 #include <map>
 
 #include "Token.hpp"
-//#include "TokenError.hpp"
 
 namespace Lexer {
 	Token const get(std::istream & source);
