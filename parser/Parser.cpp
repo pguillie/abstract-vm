@@ -1,7 +1,7 @@
 #include "Parser.hpp"
 
-Parser::Parser(char const * file) {
-	if (file) {
+Parser::Parser(std::string file) {
+	if (!file.empty()) {
 		std::ifstream ifs(file);
 		if (ifs) {
 			source_ << ifs.rdbuf();

@@ -1,37 +1,22 @@
-#include <iostream>
-#include <fstream>
-
-#include "Parser.hpp"
+#include "avm.hpp"
 
 int main(int argc, char * argv[]) {
+	std::queue<Instruction> instr;
+
 	if (argc > 2) {
 		std::cerr << "Usage: " << argv[0] << " [file]\n";
 		return 1;
 	}
-
-	Parser parser(argv[1]);
-	std::queue<Instruction> instructions;
-
-	try {
-		instructions = parser.source();
-	} catch (TokErr const & e) {
-		parser.printError(e);
-		return -1;
-	} catch (std::exception const & e) {
-		std::cerr << e.what() << "\n"
-			  << argv[0] << ": failed to parse the source code.\n";
-		return -1;
-	}
-
-	while (!instructions.empty())
+	instr = parse(argv[1] ? argv[1] : "");
+	while (!instr.empty())
 	{
-		Instruction instr = instructions.front();
-		std::cout << instr.action << ":";
+		Instruction i = instr.front();
+		std::cout << i.action << ":";
 		std::vector<std::array<std::string, 2>>::iterator it;
-		for (it = instr.value.begin() ; it != instr.value.end(); ++it)
+		for (it = i.value.begin() ; it != i.value.end(); ++it)
 			std::cout << it->back() << "(" << it->front() << "),";
 		std::cout << std::endl;
-		instructions.pop();
+		instr.pop();
 	}
 	return 0;
 }

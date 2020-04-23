@@ -37,7 +37,7 @@ private:
 
 class Parser {
 public:
-	Parser(char const * file);
+	Parser(std::string file);
 	virtual ~Parser() { };
 	// Parser(Parser const & other) =delete;
 	// Parser & operator=(Parser const & rhs) =delete;

@@ -3,16 +3,21 @@ NAME = avm
 CXX = g++
 CXXFLAGS = -Wall -Werror -Wextra
 
-sources = \
-	main.cpp \
-	Parser.cpp \
-	Lexer.cpp \
-	Token.cpp \
+sources =					\
+	main.cpp				\
+	parse.cpp				\
+	$(addprefix parser/,			\
+		Parser.cpp			\
+		Lexer.cpp			\
+		Token.cpp			\
+	)
 
-headers = \
-	Parser.hpp \
-	Lexer.hpp \
-	Token.hpp \
+headers =					\
+	$(addprefix parser/,			\
+		Parser.hpp			\
+		Lexer.hpp			\
+		Token.hpp			\
+	)
 
 objects = $(sources:%.cpp=%.o)
 
