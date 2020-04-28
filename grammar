@@ -1,0 +1,31 @@
+//source = instr (NEWLINE+ instr)*
+source = (instr NEWLINE+)*
+
+instr = instr_0
+      | instr_1 value
+
+instr_0 = "pop"
+	| "dump"
+	| "add"
+	| "sub"
+	| "mul"
+	| "div"
+	| "mod"
+	| "print"
+	| "exit"
+
+instr_1 = "push"
+	| "assert"
+
+value = integer_t LPAREN INTEGER RPAREN
+      | decimal_t LPAREN DECIMAL RPAREN
+
+integer_t = "int8" | "int16" | "int32"
+
+decimal_t = "float" | "double"
+
+// lexemes definition
+INTEGER = MINUS? DIGIT+
+DECIMAL = MINUS? ((DIGIT* DOT DIGIT+) | (DIGIT+ DOT DIGIT*))
+
+COMMENT = SEMICOLON [^NEWLINE]*
