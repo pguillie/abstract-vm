@@ -4,6 +4,7 @@ CXX = g++
 CXXFLAGS = -Wall -Werror -Wextra
 
 headers =					\
+	avm.hpp					\
 	$(addprefix parser/,			\
 		Parser.hpp			\
 		Lexer.hpp			\
@@ -21,6 +22,10 @@ sources =					\
 		Token.cpp			\
 	)					\
 	OperandFactory.cpp			\
+	execute.cpp				\
+	push.cpp				\
+	pop.cpp					\
+	dump.cpp				\
 
 objects = $(sources:%.cpp=%.o)
 

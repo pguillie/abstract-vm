@@ -4,8 +4,6 @@
 #include <string>
 
 #include "IOperand.hpp"
-//#include "Int8.hpp"
-//#include "Int16.hpp"
 
 class OperandFactory;
 
