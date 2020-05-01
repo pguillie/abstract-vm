@@ -6,6 +6,6 @@
 
 #include "parser/Parser.hpp"
 
-std::queue<Instruction> parse(std::string source_file);
+std::queue<Instruction *> parse(std::string file);
 
 #endif // AVM_H_

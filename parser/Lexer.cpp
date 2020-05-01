@@ -68,9 +68,9 @@ Token const Lexer::get(std::istream & source) {
 		source.ignore();
 		return Token(TokType::rparen, (int)source.tellg() - 1);
 	} else if (c == '\n' || c == ';') {
-		// to fix: comment starts at the `;'
+		int i = source.tellg();
 		source.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		return Token(TokType::newline, (int)source.tellg() - 1);
+		return Token(TokType::newline, i, (int)source.tellg() - i - 1);
 	} else if (std::isalpha(c)) {
 		return word(source);
 	} else if (std::isdigit(c) || c == '-' || c == '.') {
@@ -91,8 +91,7 @@ LexicalErr::LexicalErr(int line, int col, int len, std::string str):
 		if (!std::isgraph(*i))
 			*i = '?';
 	}
-	ss << line_ << ":" << column_ << ": error: unrecognized token ‘" << str
-	   << "’";
+	ss << "error: unrecognized token ‘" << str << "’";
 	message_ = ss.str();
 }
 
