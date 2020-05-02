@@ -13,8 +13,8 @@
 #include "Lexer.hpp"
 
 struct Instruction {
-	std::string action;
-	std::vector<std::array<std::string, 2>> value;
+	std::string name;
+	std::vector<std::array<std::string, 2>> args;
 };
 
 class SyntaxErr: public virtual TokErr {
@@ -37,23 +37,23 @@ private:
 
 class Parser {
 public:
-	Parser(std::string file);
+	// Parser();
 	virtual ~Parser() { };
 	// Parser(Parser const & other) =delete;
 	// Parser & operator=(Parser const & rhs) =delete;
 
-	std::queue<Instruction> source();
+	std::queue<Instruction *> source();
+	Instruction * instruction();
 
-	void printError(TokErr const & e);
+	void setSource(std::stringstream source);
+	void printError(std::string file, TokErr const & e);
 
 private:
-	SyntaxErr error(Token token, TokType type);
-	bool verify(TokType type); // get next token if types match
-	void assert(TokType type); // same but raise an exception in case they don't
-	Instruction instr();
 	std::array<std::string, 2> value();
 
-	std::string file_;
+	SyntaxErr error(Token token, TokType type);
+	Token assert(TokType type);
+
 	std::stringstream source_;
 	Token token_;
 };

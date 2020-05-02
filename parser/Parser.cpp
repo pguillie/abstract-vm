@@ -1,88 +1,67 @@
 #include "Parser.hpp"
 
-Parser::Parser(std::string file) {
-	if (!file.empty()) {
-		std::ifstream ifs(file);
-		if (ifs) {
-			source_ << ifs.rdbuf();
-			ifs.close();
-		}
-		file_ = file;
-	} else {
-		std::string line;
-		while (getline(std::cin, line)) {
-			if (line == ";;")
-				break;
-			source_ << line << std::endl;
-		}
-		source_.seekg(0, source_.beg);
-		file_ = "stdin";
-	}
+Token Parser::assert(TokType type) {
+	Token t;
+
+	t = Lexer::get(source_);
+	if (t.type() != type)
+		throw error(t, type);
+	return t;
 }
 
-bool Parser::verify(TokType type) {
-	if (token_.type() != type)
-		return false;
-	token_ = Lexer::get(source_);
-	return true;
-}
+std::queue<Instruction *> Parser::source() {
+	std::queue<Instruction *> instructions;
+	Instruction * i;
 
-void Parser::assert(TokType type) {
-	if (token_.type() != type)
-		throw error(token_, type);
-	token_ = Lexer::get(source_);
-}
-
-std::queue<Instruction> Parser::source() {
-	std::queue<Instruction> instructions;
-
-	token_ = Lexer::get(source_);
-	while (token_.type() != TokType::end) {
-		while (verify(TokType::newline)) ;
-		if (token_.type() != TokType::end)
-			instructions.push(instr());
-		if (token_.type() != TokType::end)
-			assert(TokType::newline);
+	try {
+		while ((i = instruction()))
+			instructions.push(i);
+	} catch (std::exception const & e) {
+		std::cerr<< e.what() <<std::endl;
+		throw;
 	}
 	return instructions;
 }
 
-Instruction Parser::instr() {
-	Token t = token_;
-	Instruction ins;
-	int arg;
+Instruction * Parser::instruction() {
+	Token t;
+	Instruction * i;
+	int c;
 
-	if (verify(TokType::instr_0))
-		arg = 0;
-	else if (verify(TokType::instr_1))
-		arg = 1;
-	else
-		throw error(token_, TokType::instr_0);
-	ins.action = source_.str().substr(t.index(), t.length());
-	while (arg--)
-		ins.value.push_back(value());
-	return ins;
+	do {
+		t = Lexer::get(source_);
+	} while (t.type() == TokType::newline);
+	if (t.type() == TokType::end)
+		return NULL;
+	switch (t.type()) {
+	case TokType::instr_0: c = 0; break;
+	case TokType::instr_1: c = 1; break;
+	default: throw error(t, TokType::instr_0); //type can be either one
+	}
+	i = new Instruction;
+	i->name = source_.str().substr(t.index(), t.length());
+	while (c--)
+		i->args.push_back(value());
+	assert(TokType::newline);
+	return i;
 }
 
 std::array<std::string, 2> Parser::value() {
-	std::array<std::string, 2> val; // string array to return (ie. Instruction.value)
-	Token val_type;			// first token (eg. "int8")
-	Token num;			// second token (eg. "142")
-	TokType num_type;		// second token type (eg. "integer")
+	Token t;
+	TokType type;
+	std::array<std::string, 2> val;
 
-	val_type = token_;
-	if (verify(TokType::integer_t))
-		num_type = TokType::integer;
-	else if (verify(TokType::decimal_t))
-		num_type = TokType::decimal;
-	else
-		throw error(token_, TokType::integer_t);
+	t = Lexer::get(source_);
+	switch (t.type()) {
+	case TokType::integer_t: type = TokType::integer; break;
+	case TokType::decimal_t: type = TokType::decimal; break;
+	default: throw error(t, TokType::integer_t);
+	}
+	val.at(0) = source_.str().substr(t.index(), t.length());
 	assert(TokType::lparen);
-	num = token_;
-	assert(num_type);
+	t = assert(type);
+	val.at(1) = source_.str().substr(t.index(), t.length());
 	assert(TokType::rparen);
-	val.at(0) = source_.str().substr(val_type.index(), val_type.length());
-	val.at(1) = source_.str().substr(num.index(), num.length());
 	return val;
 }
 
@@ -102,7 +81,11 @@ SyntaxErr Parser::error(Token token, TokType type) {
 	return SyntaxErr(line, col, token.length(), type, token.type(), lexeme);
 }
 
-void Parser::printError(TokErr const & tok) {
+void Parser::setSource(std::stringstream source) {
+	source_.str(source.str());
+}
+
+void Parser::printError(std::string file, TokErr const & tok) {
 	std::string str;
 	int i;
 
@@ -111,7 +94,10 @@ void Parser::printError(TokErr const & tok) {
 	while (--i)
 		source_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	getline(source_, str);
-	std::cerr << file_ << ":" << tok.what() << std::endl
+	if (!file.empty())
+		std::cerr << file << ":";
+	std::cerr << tok.line() << ":" << tok.column() << ": "
+		  << tok.what() << std::endl
 		  << " " << str << std::endl
 		  << " " << std::string(tok.column() - 1, ' ')
 		  << "^" << std::string(tok.length() - 1, '~')
@@ -125,7 +111,7 @@ SyntaxErr::SyntaxErr(int line, int col, int len, TokType expected,
 	line_(line), column_(col), length_(len) {
 	std::stringstream ss;
 
-	ss << line_ << ":" << column_ << ": error: expected "
+	ss << "error: expected "
 	   << Token::toString(expected) << " before " << Token::toString(actual);
 	if (actual == TokType::instr_0 || actual == TokType::instr_1
 		|| actual == TokType::integer_t || actual == TokType::decimal_t
