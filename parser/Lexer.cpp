@@ -4,29 +4,33 @@ static LexicalErr error(std::istream & source, int index, int len) {
 	int line, col, line_pos;
 	std::string str, lexeme;
 
+	source.clear();
 	source.seekg(0, source.beg);
 	line = 0;
 	do {
 		line_pos = source.tellg();
 		getline(source, str);
 		line++;
-	} while (source.tellg() < index + 1);
+	} while (source.tellg() < index + 1 && !source.eof());
 	col = index + 1 - line_pos;
 	lexeme = str.substr(col - 1, len);
 	return LexicalErr(line, col, len, lexeme);
 }
 
 static Token const word(std::istream & source) {
-	std::map<std::string, TokType>::const_iterator i;
+	std::set<std::string>::iterator search;
 	std::string str;
 	int index = source.tellg();
 
 	while (std::isalnum(source.peek()))
 		str += source.get();
-	i = Lexer::keywords.find(str);
-	if (i == Lexer::keywords.end())
-		throw error(source, index, str.length());
-	return Token(i->second, index, str.length());
+	search = Lexer::instructions.find(str);
+	if (search != Lexer::instructions.end())
+		return Token(TokType::instruction, index, str.length());
+	search = Lexer::types.find(str);
+	if (search != Lexer::types.end())
+		return Token(TokType::type, index, str.length());
+	throw error(source, index, str.length());
 }
 
 static Token const number(std::istream & source) {
@@ -60,7 +64,7 @@ Token const Lexer::get(std::istream & source) {
 		source.ignore();
 	c = source.peek();
 	if (c == EOF) {
-		return Token(TokType::end, (int)source.tellg());
+		return Token(TokType::eof, (int)source.tellg());
 	} else if (c == '(') {
 		source.ignore();
 		return Token(TokType::lparen, (int)source.tellg() - 1);
@@ -70,7 +74,7 @@ Token const Lexer::get(std::istream & source) {
 	} else if (c == '\n' || c == ';') {
 		int i = source.tellg();
 		source.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		return Token(TokType::newline, i, (int)source.tellg() - i - 1);
+		return Token(TokType::newline, i, (int)source.tellg() - i);
 	} else if (std::isalpha(c)) {
 		return word(source);
 	} else if (std::isdigit(c) || c == '-' || c == '.') {
@@ -80,7 +84,6 @@ Token const Lexer::get(std::istream & source) {
 }
 
 			   // Exceptions //
-
 
 LexicalErr::LexicalErr(int line, int col, int len, std::string str):
 	line_(line), column_(col), length_(len) {

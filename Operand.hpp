@@ -31,11 +31,15 @@ public:
 protected:
 	N const value;
 	std::string const str;
+	static OperandFactory const factory;
 
 private:
 	std::string stringify(N value);
 
 };
+
+template <class N>
+OperandFactory const Operand<N>::factory;
 
 template <class N>
 std::string Operand<N>::stringify(N value) {

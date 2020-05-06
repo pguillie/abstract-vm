@@ -3,8 +3,6 @@
 #include "OperandFactory.hpp"
 #include "Operand.hpp"
 
-OperandFactory const factory;
-
 createFunc const OperandFactory::create[5] = {
 	[INT8] = &OperandFactory::createInt8,
 	[INT16] = &OperandFactory::createInt16,

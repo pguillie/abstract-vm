@@ -12,20 +12,37 @@ headers =					\
 	)					\
 	IOperand.hpp				\
 	Operand.hpp				\
+	$(addprefix instructions/,		\
+		Instruction.hpp			\
+		Push.hpp			\
+		Pop.hpp				\
+		Dump.hpp			\
+		Assert.hpp			\
+		Operation.hpp			\
+		Print.hpp			\
+		Exit.hpp			\
+	)
 
 sources =					\
 	main.cpp				\
 	parse.cpp				\
+	execute.cpp				\
 	$(addprefix parser/,			\
 		Parser.cpp			\
 		Lexer.cpp			\
 		Token.cpp			\
 	)					\
 	OperandFactory.cpp			\
-	execute.cpp				\
-	push.cpp				\
-	pop.cpp					\
-	dump.cpp				\
+	$(addprefix instructions/,		\
+		Instruction.cpp			\
+		Push.cpp			\
+		Pop.cpp				\
+		Dump.cpp			\
+		Assert.cpp			\
+		Operation.cpp			\
+		Print.cpp			\
+		Exit.cpp			\
+	)
 
 objects = $(sources:%.cpp=%.o)
 
