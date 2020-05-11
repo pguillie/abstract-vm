@@ -20,22 +20,39 @@ void Assert::execute(AbstractStack<IOperand const *> & stack) const {
 			  << (args.size() > 1 ? "s" : "") << ")\n";
 	for (Value const & val : args) {
 		if (it == stack.crend())
-			throw std::runtime_error("Assert: empty stack!");
+			throw Instruction::StackOutOfRange(
+				"assert: no operand left on stack.");
 		op = *it;
 		if (verbose) {
 			cout << "... " << val.value << " " << type(val.type)
 			     << " = " << op->toString() << " "
 			     << type(op->getType()) << " ? ";
 		}
-		if (val.type != (*it)->getType()) {
-			if (verbose) cout << "FALSE\n";
-			throw std::runtime_error("Assert: types differ");
-		}
 		if (std::stod(val.value) != std::stod((*it)->toString())) {
-			if (verbose) cout << "FALSE\n";
-			throw std::runtime_error("Assert: values differ");
+			if (verbose) cout << "false\n";
+			throw Assert::Exception(Assert::Wrong::value);
 		}
-		if (verbose) cout << "TRUE\n";
+		if (val.type != (*it)->getType()) {
+			if (verbose) cout << "false\n";
+			throw Assert::Exception(Assert::Wrong::type);
+		}
+		if (verbose) cout << "true\n";
 		it++;
+	}
+}
+
+			   // Exceptions //
+
+Assert::Exception::Exception(enum Wrong cause): cause(cause) {
+}
+
+char const * Assert::Exception::what() const throw() {
+	switch (cause) {
+	case Wrong::type:
+		return "Assertion error: the operands have different types.";
+	case Wrong::value:
+		return "Assertion error: the operands have different values.";
+	default:
+		return "Assertion error.";
 	}
 }

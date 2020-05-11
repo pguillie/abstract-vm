@@ -12,6 +12,7 @@ headers =					\
 	)					\
 	IOperand.hpp				\
 	Operand.hpp				\
+	OperandExceptions.hpp			\
 	$(addprefix instructions/,		\
 		Instruction.hpp			\
 		Push.hpp			\
@@ -33,6 +34,7 @@ sources =					\
 		Token.cpp			\
 	)					\
 	OperandFactory.cpp			\
+	OperandExceptions.cpp			\
 	$(addprefix instructions/,		\
 		Instruction.cpp			\
 		Push.cpp			\

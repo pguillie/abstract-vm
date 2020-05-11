@@ -4,14 +4,21 @@ Dump::Dump(int count): count(count < 0 ? 0 : count) { }
 
 void Dump::execute(AbstractStack<IOperand const *> & stack) const {
 	int c = count;
+	int size;
 
 	if (verbose) {
 		cout << "[+] dump";
 		if (c) cout << " (" << c << " value" << (c > 1 ? "s" : "") << ")";
 		cout << std::endl;
 	}
-	if (verbose && stack.empty())
-		cout << "... (empty stack)\n";
+	if (verbose) {
+		size = stack.size();
+		if (size == 0)
+			cout << "... empty stack\n";
+		else if (size < c)
+			cout << "... stack contains only " << size << " value"
+			     << (size > 1 ? "s" : "") << ":\n";
+	}
 	for (auto it = stack.crbegin() ; it != stack.crend() && (!count || c) ;
 	     it++, c--) {
 		if (verbose) {

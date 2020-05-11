@@ -13,6 +13,17 @@ public:
 
 	void execute(AbstractStack<IOperand const *> &) const;
 
+	enum class Wrong { type, value };
+
+	class Exception: public Instruction::StdExcept {
+	public:
+		Exception(enum Wrong cause);
+		virtual ~Exception() { }
+		char const * what() const throw();
+	private:
+		enum Wrong cause;
+	};
+
 private:
 	std::vector<Value> const args;
 };

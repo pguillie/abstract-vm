@@ -10,6 +10,13 @@ public:
 
 	void execute(AbstractStack<IOperand const *> &) const;
 
+	class TypeException: public Instruction::StdExcept {
+	public:
+//		TypeException();
+		virtual ~TypeException() { }
+		char const * what() const throw();
+	};
+
 private:
 	int const count;
 };

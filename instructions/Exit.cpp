@@ -9,3 +9,9 @@ void Exit::execute(AbstractStack<IOperand const *> & stack) const {
 		stack.pop();
 	}
 }
+
+			   // Exceptions //
+
+char const * Exit::Exception::what() const throw() {
+	return "no exit instruction.";
+}

@@ -25,10 +25,19 @@ static std::string OpeSymb(Operation::Type op) {
 	}
 }
 
+Instruction::StackOutOfRange error(Operation::Type op) {
+	std::ostringstream os;
+
+	os << OpeName(op) << ": no operand left on stack.";
+	return Instruction::StackOutOfRange(os.str().c_str());
+}
+
 void Operation::calc(AbstractStack<IOperand const *> & stack,
 	IOperand const * rhs) const {
 	IOperand const * lhs;
 
+	if (stack.empty())
+		throw error(op);
 	lhs = stack.top();
 	if (verbose) cout << "..| retrieve 'lhs' from stack: "
 			  << lhs->toString() << "\n";
@@ -54,6 +63,8 @@ void Operation::execute(AbstractStack<IOperand const *> & stack) const {
 		cout << std::endl;
 	}
 	if (args.empty()) {
+		if (stack.empty())
+			throw error(op);
 		rhs = stack.top();
 		stack.pop();
 		if (verbose) cout << "..| retrieve 'rhs' from stack: "

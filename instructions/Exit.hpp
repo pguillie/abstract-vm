@@ -9,6 +9,12 @@ public:
 	virtual ~Exit() { }
 
 	void execute(AbstractStack<IOperand const *> &) const;
+
+	class Exception: public std::exception {
+	public:
+		virtual ~Exception() { }
+		char const * what() const throw();
+	};
 };
 
 #endif // INSTRUCTIONS_EXIT_H_

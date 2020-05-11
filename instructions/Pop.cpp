@@ -8,6 +8,8 @@ void Pop::execute(AbstractStack<IOperand const *> & stack) const {
 	if (verbose) cout << "[+] pop (" << count << " value"
 			  << (count > 1 ? "s" : "") << ")\n";
 	for (int c = 0 ; c < count ; c++) {
+		if (stack.empty())
+			throw Instruction::StackOutOfRange("pop: empty stack.");
 		op = stack.top();
 		if (verbose) cout << "... " << op->toString() << std::endl;
 		stack.pop();
