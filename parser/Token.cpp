@@ -17,13 +17,9 @@ int Token::length() const {
 
 std::string Token::toString(TokType type) {
 	switch (type) {
-	case TokType::instr_0:
+	case TokType::instruction:
 		return "instruction";
-	case TokType::instr_1:
-		return "instruction";
-	case TokType::integer_t:
-		return "numeric type";
-	case TokType::decimal_t:
+	case TokType::type:
 		return "numeric type";
 	case TokType::integer:
 		return "integer value";
@@ -35,39 +31,9 @@ std::string Token::toString(TokType type) {
 		return "parenthese";
 	case TokType::newline:
 		return "newline";
-	case TokType::end:
+	case TokType::eof:
 		return "end-of-file";
 	default:
 		return "unknown";
 	}
-}
-
-//tmp
-std::ostream & operator<<(std::ostream & os, Token const & t) {
-	std::string type;
-
-	if (t.type_ == TokType::instr_0)
-		type = "instr0";
-	else if (t.type_ == TokType::instr_1)
-		type = "instr1";
-	else if (t.type_ == TokType::integer_t)
-		type = "int_type";
-	else if (t.type_ == TokType::decimal_t)
-		type = "dec_type";
-	else if (t.type_ == TokType::integer)
-		type = "int_value";
-	else if (t.type_ == TokType::decimal)
-		type = "dec_value";
-	else if (t.type_ == TokType::lparen)
-		type = "lparen";
-	else if (t.type_ == TokType::rparen)
-		type = "rparen";
-	else if (t.type_ == TokType::newline)
-		type = "newline";
-	else if (t.type_ == TokType::end)
-		type = "end";
-	else
-		type = "unknown";
-	os << "Token: " << type << "(" << t.index_ << ", " << t.length_ << ")";
-	return os;
 }

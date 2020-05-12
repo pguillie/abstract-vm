@@ -3,30 +3,19 @@
 
 #include <iostream>
 #include <sstream>
-#include <map>
+#include <set>
 
 #include "Token.hpp"
 
 namespace Lexer {
 	Token const get(std::istream & source);
 
-	std::map<std::string, TokType> const keywords = {
-		{"push", TokType::instr_1},
-		{"pop", TokType::instr_0},
-		{"dump", TokType::instr_0},
-		{"assert", TokType::instr_1},
-		{"add", TokType::instr_0},
-		{"sub", TokType::instr_0},
-		{"mul", TokType::instr_0},
-		{"div", TokType::instr_0},
-		{"mod", TokType::instr_0},
-		{"print", TokType::instr_0},
-		{"exit", TokType::instr_0},
-		{"int8", TokType::integer_t},
-		{"int16", TokType::integer_t},
-		{"int32", TokType::integer_t},
-		{"float", TokType::decimal_t},
-		{"double", TokType::decimal_t}
+	std::set<std::string> const instructions = {
+		"push", "pop", "dump", "assert", "add", "sub", "mul",
+		"div", "mod", "print", "exit"
+	};
+	std::set<std::string> const types = {
+		"int8", "int16", "int32", "float", "double"
 	};
 }
 

@@ -8,8 +8,7 @@
 
 // All possible types a Token can have.
 enum class TokType {
-	instr_0, instr_1, integer_t, decimal_t, integer, decimal,
-	lparen, rparen, newline, end
+	instruction, type, integer, decimal, lparen, rparen, newline, eof
 };
 
 // Interface to handle lexical errors.
@@ -38,9 +37,6 @@ public:
 	int length(void) const;
 
 	static std::string toString(TokType type);
-
-	//tmp
-	friend std::ostream & operator<<(std::ostream & os, Token const & token);
 
 private:
 	void error(void) const;

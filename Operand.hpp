@@ -9,6 +9,7 @@
 
 #include "IOperand.hpp"
 #include "OperandFactory.hpp"
+#include "OperandExceptions.hpp"
 
 template <class N>
 class Operand: public IOperand {
@@ -31,11 +32,15 @@ public:
 protected:
 	N const value;
 	std::string const str;
+	static OperandFactory const factory;
 
 private:
 	std::string stringify(N value);
 
 };
+
+template <class N>
+OperandFactory const Operand<N>::factory;
 
 template <class N>
 std::string Operand<N>::stringify(N value) {
@@ -82,16 +87,22 @@ IOperand const * Operand<N>::operator*(IOperand const & rhs) const {
 
 template <class N>
 IOperand const * Operand<N>::operator/(IOperand const & rhs) const {
+	double r = std::stod(rhs.toString());
+
+	if (r == 0)
+		throw OperandDomainError();
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
-		rhs.getType() : getType(),
-		std::to_string(value / std::stod(rhs.toString())));
+		rhs.getType() : getType(), std::to_string(value / r));
 }
 
 template <class N>
 IOperand const * Operand<N>::operator%(IOperand const & rhs) const {
+	double r = std::stod(rhs.toString());
+
+	if (r == 0)
+		throw OperandDomainError();
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
-		rhs.getType() : getType(),
-		std::to_string(fmod(value, std::stod(rhs.toString()))));
+		rhs.getType() : getType(), std::to_string(fmod(value, r)));
 }
 
 template <class N>

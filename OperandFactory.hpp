@@ -4,11 +4,8 @@
 #include <string>
 
 #include "IOperand.hpp"
-//#include "Int8.hpp"
-//#include "Int16.hpp"
 
 class OperandFactory;
-
 typedef IOperand const * (OperandFactory::*createFunc)
 	(std::string const & value) const;
 
@@ -26,7 +23,5 @@ private:
 
 	static createFunc const create[5];
 };
-
-extern OperandFactory const factory;
 
 #endif // OPERANDFACTORY_H_
