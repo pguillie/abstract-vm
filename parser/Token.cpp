@@ -26,9 +26,11 @@ std::string Token::toString(TokType type) {
 	case TokType::decimal:
 		return "decimal value";
 	case TokType::lparen:
-		return "parenthese";
+		return "‘(’";
 	case TokType::rparen:
-		return "parenthese";
+		return "‘)’";
+	case TokType::comma:
+		return "‘,’";
 	case TokType::newline:
 		return "newline";
 	case TokType::eof:

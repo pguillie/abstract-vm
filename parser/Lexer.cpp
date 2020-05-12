@@ -71,6 +71,9 @@ Token const Lexer::get(std::istream & source) {
 	} else if (c == ')') {
 		source.ignore();
 		return Token(TokType::rparen, (int)source.tellg() - 1);
+	} else if (c == ',') {
+		source.ignore();
+		return Token(TokType::comma, (int)source.tellg() - 1);
 	} else if (c == '\n' || c == ';') {
 		int i = source.tellg();
 		source.ignore(std::numeric_limits<std::streamsize>::max(), '\n');

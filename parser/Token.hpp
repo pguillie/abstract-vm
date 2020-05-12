@@ -8,7 +8,7 @@
 
 // All possible types a Token can have.
 enum class TokType {
-	instruction, type, integer, decimal, lparen, rparen, newline, eof
+	instruction, type, integer, decimal, lparen, rparen, comma, newline, eof
 };
 
 // Interface to handle lexical errors.

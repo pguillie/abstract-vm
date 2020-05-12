@@ -24,13 +24,8 @@ std::queue<Instruction *> Parser::source() {
 	std::queue<Instruction *> instructions;
 	Instruction * i;
 
-	try {
-		while ((i = instruction()))
-			instructions.push(i);
-	} catch (std::exception const & e) {
-		std::cerr<< e.what() <<std::endl;
-		throw;
-	}
+	while ((i = instruction()))
+		instructions.push(i);
 	return instructions;
 }
 
@@ -45,70 +40,29 @@ Instruction * Parser::instruction() {
 		return NULL;
 	assert(t, TokType::instruction);
 	lexeme = source_.str().substr(t.index(), t.length());
+	if (instructions.find(lexeme) == instructions.end())
+		throw std::out_of_range("Error: unknown instruction.");
 	return (this->*instructions.at(lexeme))();
 }
 
 Instruction * Parser::avm_push() {
-	Token t;
-	std::vector<Value> args;
-
-	t = Lexer::get(source_);
-	do {
-		args.push_back(value(t));
-		t = Lexer::get(source_);
-	} while (t.type() != TokType::newline);
-	return new Push(args);
+	return new Push(value_args(1));
 }
 
 Instruction * Parser::avm_pop() {
-	Token t;
-	int count = 0;
-
-	t = Lexer::get(source_);
-	if (t.type() == TokType::integer) {
-		count = std::stoi(source_.str().substr(t.index(), t.length()));
-		t = Lexer::get(source_);
-	}
-	assert(t, TokType::newline);
-	return new Pop(count);
+	return new Pop(int_arg());
 }
 
 Instruction * Parser::avm_dump() {
-	Token t;
-	int count = 0;
-
-	t = Lexer::get(source_);
-	if (t.type() == TokType::integer) {
-		count = std::stoi(source_.str().substr(t.index(), t.length()));
-		t = Lexer::get(source_);
-	}
-	assert(t, TokType::newline);
-	return new Dump(count);
+	return new Dump(int_arg());
 }
 
 Instruction * Parser::avm_assert() {
-	Token t;
-	std::vector<Value> args;
-
-	t = Lexer::get(source_);
-	do {
-		args.push_back(value(t));
-		t = Lexer::get(source_);
-	} while (t.type() != TokType::newline && t.type() != TokType::eof);
-	return new Assert(args);
+	return new Assert(value_args(1));
 }
 
 Instruction * Parser::avm_operation(Operation::Type op) {
-	Token t;
-	std::vector<Value> args;
-
-	t = Lexer::get(source_);
-	while (t.type() == TokType::type) {
-		args.push_back(value(t));
-		t = Lexer::get(source_);
-	}
-	assert(t, TokType::newline);
-	return new Operation(op, args);
+	return new Operation(op, value_args(0));
 }
 
 Instruction * Parser::avm_add() {
@@ -132,21 +86,40 @@ Instruction * Parser::avm_mod() {
 }
 
 Instruction * Parser::avm_print() {
-	Token t;
-	int count = 0;
-
-	t = Lexer::get(source_);
-	if (t.type() == TokType::integer) {
-		count = std::stoi(source_.str().substr(t.index(), t.length()));
-		t = Lexer::get(source_);
-	}
-	assert(t, TokType::newline);
-	return new Print(count);
+	return new Print(int_arg());
 }
 
 Instruction * Parser::avm_exit() {
 	assert(Lexer::get(source_), TokType::newline);
 	return new Exit();
+}
+
+std::vector<Value> Parser::value_args(unsigned int req) {
+	Token t;
+	std::vector<Value> args;
+
+	t = Lexer::get(source_);
+	if (!req && t.type() != TokType::type) {
+		assert(t, TokType::newline);
+		return args;
+	}
+	args.push_back(value(t));
+	t = Lexer::get(source_);
+	if (req)
+		req--;
+	while (t.type() == TokType::comma) {
+		t = Lexer::get(source_);
+		args.push_back(value(t));
+		if (req)
+			req--;
+		t = Lexer::get(source_);
+		if (t.type() == TokType::newline)
+			break;
+	}
+	if (req)
+		throw error(t, TokType::comma);
+	assert(t, TokType::newline);
+	return args;
 }
 
 Value Parser::value(Token t) {
@@ -166,6 +139,19 @@ Value Parser::value(Token t) {
 	val.value = source_.str().substr(t.index(), t.length());
 	assert(Lexer::get(source_), TokType::rparen);
 	return val;
+}
+
+int Parser::int_arg() {
+	Token t;
+	int arg = 0;
+
+	t = Lexer::get(source_);
+	if (t.type() == TokType::integer) {
+		arg = std::stoi(source_.str().substr(t.index(), t.length()));
+		t = Lexer::get(source_);
+	}
+	assert(t, TokType::newline);
+	return arg;
 }
 
 SyntaxErr Parser::error(Token token, TokType type) {

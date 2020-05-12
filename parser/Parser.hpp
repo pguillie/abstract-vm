@@ -69,7 +69,9 @@ private:
 	Instruction * avm_print();
 	Instruction * avm_exit();
 
+	std::vector<Value> value_args(unsigned int min);
 	Value value(Token t);
+	int int_arg();
 
 	SyntaxErr error(Token token, TokType type);
 	Token assert(Token token, TokType type);

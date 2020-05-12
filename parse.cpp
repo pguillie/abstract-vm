@@ -27,10 +27,6 @@ std::queue<Instruction *> parse(std::string file) {
 	parser.setSource(read_source(file));
 	try {
 		instructions = parser.source();
-		// or:
-		// Instruction * i;
-		// while ((i = parser.instruction()))
-		// 	instructions.push(i);
 	} catch (TokErr const & e) {
 		parser.printError(file, e);
 		exit(1);
