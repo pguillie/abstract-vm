@@ -26,6 +26,9 @@ public:
 	IOperand const * operator*(IOperand const & rhs) const;
 	IOperand const * operator/(IOperand const & rhs) const;
 	IOperand const * operator%(IOperand const & rhs) const;
+	IOperand const * operator&(IOperand const & rhs) const;
+	IOperand const * operator|(IOperand const & rhs) const;
+	IOperand const * operator^(IOperand const & rhs) const;
 
 	std::string const & toString(void) const;
 
@@ -39,75 +42,6 @@ private:
 
 };
 
-template <class N>
-OperandFactory const Operand<N>::factory;
-
-template <class N>
-std::string Operand<N>::stringify(N value) {
-	std::ostringstream os;
-
-	os << +value;
-	return os.str();
-}
-
-template <class N>
-int Operand<N>::getPrecision(void) const {
-	return getType();
-}
-
-template <class N>
-eOperandType Operand<N>::getType(void) const {
-	if (typeid(N) == typeid(int8_t)) return INT8;
-	if (typeid(N) == typeid(int16_t)) return INT16;
-	if (typeid(N) == typeid(int32_t)) return INT32;
-	if (typeid(N) == typeid(float)) return FLOAT;
-	return DOUBLE;
-}
-
-template <class N>
-IOperand const * Operand<N>::operator+(IOperand const & rhs) const {
-	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
-		rhs.getType() : getType(),
-		std::to_string(value + std::stod(rhs.toString())));
-}
-
-template <class N>
-IOperand const * Operand<N>::operator-(IOperand const & rhs) const {
-	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
-		rhs.getType() : getType(),
-		std::to_string(value - std::stod(rhs.toString())));
-}
-
-template <class N>
-IOperand const * Operand<N>::operator*(IOperand const & rhs) const {
-	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
-		rhs.getType() : getType(),
-		std::to_string(value * std::stod(rhs.toString())));
-}
-
-template <class N>
-IOperand const * Operand<N>::operator/(IOperand const & rhs) const {
-	double r = std::stod(rhs.toString());
-
-	if (r == 0)
-		throw OperandDomainError();
-	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
-		rhs.getType() : getType(), std::to_string(value / r));
-}
-
-template <class N>
-IOperand const * Operand<N>::operator%(IOperand const & rhs) const {
-	double r = std::stod(rhs.toString());
-
-	if (r == 0)
-		throw OperandDomainError();
-	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
-		rhs.getType() : getType(), std::to_string(fmod(value, r)));
-}
-
-template <class N>
-std::string const & Operand<N>::toString(void) const {
-	return str;
-};
+#include "Operand.tpp"
 
 #endif // OPERAND_H_

@@ -25,6 +25,11 @@ public:
 	virtual std::string const & toString(void) const =0; // String representation of the instance
 
 	virtual ~IOperand(void) { }
+
+	// Bonus
+	virtual IOperand const * operator&(IOperand const & rhs) const =0;
+	virtual IOperand const * operator|(IOperand const & rhs) const =0;
+	virtual IOperand const * operator^(IOperand const & rhs) const =0;
 };
 
 #endif // IOPERAND_H

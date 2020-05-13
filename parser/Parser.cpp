@@ -12,6 +12,9 @@ std::map<std::string, fptr> Parser::instructions = {
 	{"mod", &Parser::avm_mod},
 	{"print", &Parser::avm_print},
 	{"exit", &Parser::avm_exit},
+	{"and", &Parser::avm_and},
+	{"or", &Parser::avm_or},
+	{"xor", &Parser::avm_xor}
 };
 
 Token Parser::assert(Token token, TokType type) {
@@ -83,6 +86,18 @@ Instruction * Parser::avm_div() {
 
 Instruction * Parser::avm_mod() {
 	return avm_operation(Operation::Type::mod);
+}
+
+Instruction * Parser::avm_and() {
+	return avm_operation(Operation::Type::bw_and);
+}
+
+Instruction * Parser::avm_or() {
+	return avm_operation(Operation::Type::bw_or);
+}
+
+Instruction * Parser::avm_xor() {
+	return avm_operation(Operation::Type::bw_xor);
 }
 
 Instruction * Parser::avm_print() {

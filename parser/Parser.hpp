@@ -65,6 +65,9 @@ private:
 	Instruction * avm_mul();
 	Instruction * avm_div();
 	Instruction * avm_mod();
+	Instruction * avm_and();
+	Instruction * avm_or();
+	Instruction * avm_xor();
 	Instruction * avm_operation(Operation::Type op);
 	Instruction * avm_print();
 	Instruction * avm_exit();

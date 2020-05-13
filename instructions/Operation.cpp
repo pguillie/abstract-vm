@@ -3,7 +3,9 @@
 OperandFactory const Operation::factory;
 
 Operation::Operation(enum Type op, std::vector<Value> const & args):
-	op(op), args(args) { }
+	op(op),
+	args(args)
+{ }
 
 static std::string OpeName(Operation::Type op) {
 	switch (op) {
@@ -11,7 +13,10 @@ static std::string OpeName(Operation::Type op) {
 	case (Operation::Type::sub): return "sub";
 	case (Operation::Type::mul): return "mul";
 	case (Operation::Type::div): return "div";
-	default: return "mod";
+	case (Operation::Type::mod): return "mod";
+	case (Operation::Type::bw_and): return "and";
+	case (Operation::Type::bw_or): return "or";
+	default: return "xor";
 	}
 }
 
@@ -21,7 +26,10 @@ static std::string OpeSymb(Operation::Type op) {
 	case (Operation::Type::sub): return " - ";
 	case (Operation::Type::mul): return " * ";
 	case (Operation::Type::div): return " / ";
-	default: return " % ";
+	case (Operation::Type::mod): return " % ";
+	case (Operation::Type::bw_and): return " & ";
+	case (Operation::Type::bw_or): return " | ";
+	default: return " ^ ";
 	}
 }
 
@@ -39,16 +47,21 @@ void Operation::calc(AbstractStack<IOperand const *> & stack,
 	if (stack.empty())
 		throw error(op);
 	lhs = stack.top();
-	if (verbose) cout << "..| retrieve 'lhs' from stack: "
-			  << lhs->toString() << "\n";
+	if (verbose)
+		cout << "..| retrieve 'lhs' from stack: "
+		     << lhs->toString() << "\n";
 	stack.top() = (op == Type::add) ? *lhs + *rhs
 		: (op == Type::sub) ? *lhs - *rhs
 		: (op == Type::mul) ? *lhs * *rhs
 		: (op == Type::div) ? *lhs / *rhs
-		: *lhs % *rhs;
-	if (verbose) cout << "..+-> " << lhs->toString() << OpeSymb(op)
-			  << rhs->toString() << " = " << stack.top()->toString()
-			  << std::endl;
+		: (op == Type::mod) ? *lhs % *rhs
+		: (op == Type::bw_and) ? *lhs & *rhs
+		: (op == Type::bw_or) ? *lhs | *rhs
+		: *lhs ^ *rhs;
+	if (verbose)
+		cout << "..+-> " << lhs->toString() << OpeSymb(op)
+		     << rhs->toString() << " = " << stack.top()->toString()
+		     << std::endl;
 	delete lhs;
 	delete rhs;
 }
@@ -58,8 +71,9 @@ void Operation::execute(AbstractStack<IOperand const *> & stack) const {
 
 	if (verbose) {
 		cout << "[+] " << OpeName(op);
-		if (args.size()) cout << " (" << args.size() << " value"
-				      << (args.size() > 1 ? "s" : "") << ")";
+		if (args.size())
+			cout << " (" << args.size() << " value"
+			     << (args.size() > 1 ? "s" : "") << ")";
 		cout << std::endl;
 	}
 	if (args.empty()) {
@@ -67,14 +81,16 @@ void Operation::execute(AbstractStack<IOperand const *> & stack) const {
 			throw error(op);
 		rhs = stack.top();
 		stack.pop();
-		if (verbose) cout << "..| retrieve 'rhs' from stack: "
-				  << rhs->toString() << "\n";
+		if (verbose)
+			cout << "..| retrieve 'rhs' from stack: "
+			     << rhs->toString() << "\n";
 		calc(stack, rhs);
 	}
 	for (Value const & val : args) {
 		rhs = factory.createOperand(val.type, val.value);
-		if (verbose) cout << "..| retrieve 'rhs' from arguments: "
-				  << rhs->toString() << "\n";
+		if (verbose)
+			cout << "..| retrieve 'rhs' from arguments: "
+			     << rhs->toString() << "\n";
 		calc(stack, rhs);
 	}
 }

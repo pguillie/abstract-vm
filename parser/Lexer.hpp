@@ -12,7 +12,7 @@ namespace Lexer {
 
 	std::set<std::string> const instructions = {
 		"push", "pop", "dump", "assert", "add", "sub", "mul",
-		"div", "mod", "print", "exit"
+		"div", "mod", "print", "exit", "and", "or", "xor"
 	};
 	std::set<std::string> const types = {
 		"int8", "int16", "int32", "float", "double"

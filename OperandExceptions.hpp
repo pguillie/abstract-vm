@@ -25,7 +25,7 @@ public:
 
 class OperandDomainError: public OperandException, public std::domain_error {
 public:
-	OperandDomainError();
+	OperandDomainError(std::string const & what_arg);
 	virtual ~OperandDomainError() { }
 	char const * what() const throw();
 };

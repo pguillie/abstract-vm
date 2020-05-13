@@ -5,11 +5,12 @@
 
 #include "Instruction.hpp"
 #include "../OperandFactory.hpp"
+#include "../Operand.hpp"
 #include "../Value.hpp"
 
 class Operation: public Instruction {
 public:
-	enum class Type { add, sub, mul, div, mod };
+	enum class Type { add, sub, mul, div, mod, bw_and, bw_or, bw_xor };
 
 	Operation(enum Type op, std::vector<Value> const &);
 	virtual ~Operation() { }

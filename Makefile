@@ -11,6 +11,7 @@ headers =					\
 		Token.hpp			\
 	)					\
 	IOperand.hpp				\
+	Operand.tpp				\
 	Operand.hpp				\
 	OperandExceptions.hpp			\
 	$(addprefix instructions/,		\
