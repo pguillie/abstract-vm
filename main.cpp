@@ -2,17 +2,12 @@
 
 #include "avm.hpp"
 
-int main(int argc, char * argv[]) {
-	std::string source_file;
+int main(int argc __attribute__((__unused__)), char * argv[]) {
+	std::map<std::string, std::string> opt;
+	std::string file;
 
-	if (argc > 2) {
-		std::cerr << "Usage: " << argv[0] << " [file]\n";
+	if (!invocation(argv, opt, file))
 		return 1;
-	}
-	if (argv[1])
-		source_file = argv[1];
-	else
-		source_file.clear();
-	execute(parse(source_file));
+	execute(parse(file));
 	return 0;
 }

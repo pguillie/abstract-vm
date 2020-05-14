@@ -1,7 +1,9 @@
 NAME = avm
 
-CXX = g++
-CXXFLAGS = -Wall -Werror -Wextra
+CXX = clang++
+CXXFLAGS = $(warning) $(version)
+warning := -Wall -Werror -Wextra
+version := -std=c++2a
 
 headers =					\
 	avm.hpp					\
@@ -27,6 +29,7 @@ headers =					\
 
 sources =					\
 	main.cpp				\
+	invocation.cpp				\
 	parse.cpp				\
 	execute.cpp				\
 	$(addprefix parser/,			\
