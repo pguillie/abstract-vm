@@ -192,8 +192,8 @@ SyntaxErr Parser::error(Token token, TokType type) {
 	return SyntaxErr(line, col, token.length(), type, token.type(), lexeme);
 }
 
-void Parser::setSource(std::stringstream source) {
-	source_.str(source.str());
+void Parser::setSource(std::stringstream& source) {
+	source_.swap(source);
 }
 
 void Parser::printError(std::string file, TokErr const & tok) {

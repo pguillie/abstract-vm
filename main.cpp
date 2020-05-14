@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "avm.hpp"
 
 int main(int argc __attribute__((__unused__)), char * argv[]) {
@@ -8,6 +6,7 @@ int main(int argc __attribute__((__unused__)), char * argv[]) {
 
 	if (!invocation(argv, opt, file))
 		return 1;
-	execute(parse(file));
-	return 0;
+	return (opt.count("interactive"))
+		? interactive(opt)
+		: non_interactive(file, opt);
 }

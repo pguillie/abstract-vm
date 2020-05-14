@@ -52,7 +52,7 @@ public:
 	std::queue<Instruction *> source();
 	Instruction * instruction();
 
-	void setSource(std::stringstream source);
+	void setSource(std::stringstream& source);
 	void printError(std::string file, TokErr const & e);
 
 private:

@@ -7,36 +7,23 @@
 #include "instructions/Instruction.hpp"
 #include "instructions/Exit.hpp"
 
-static void exec_instr(Instruction & i, AbstractStack<IOperand const *> & stack) {
-	i.setVerbose();
+bool execute(Instruction& instruction, AbstractStack<const IOperand*>& stack,
+	const std::map<std::string, std::string>& opt)
+{
+	if (opt.count("verbose"))
+		instruction.setVerbose();
 	try {
-		i.execute(stack);
-	} catch (Instruction::Exception const &) {
-		std::cerr << "An instruction error caused the program to stop.\n";
+		instruction.execute(stack);
+	} catch (const Instruction::Exception&) {
+		std::cerr << "An instruction error caused the program to stop\n";
 		throw;
-	} catch (OperandException const &) {
-		std::cerr << "An operation error caused the program to stop.\n";
+	} catch (const OperandException&) {
+		std::cerr << "An operation error caused the program to stop\n";
 		throw;
 	}
-}
-
-void execute(std::queue<Instruction *> instructions) {
-	AbstractStack<IOperand const *> stack;
-	bool exited = false;
-
 	try {
-		while (!instructions.empty()) {
-			Instruction * i = instructions.front();
-			instructions.pop();
-			if (!exited) {
-				exec_instr(*i, stack);
-				exited = (dynamic_cast<Exit *>(i) != NULL);
-			}
-			delete i;
-		}
-		if (!exited)
-			throw Exit::Exception();
-	} catch (std::exception const & e) {
-		std::cerr << "Error: " << e.what() << std::endl;
-	}
+		(void)dynamic_cast<Exit&>(instruction);
+		return true;
+	} catch (...) { }
+	return false;
 }

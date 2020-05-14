@@ -30,7 +30,8 @@ headers =					\
 sources =					\
 	main.cpp				\
 	invocation.cpp				\
-	parse.cpp				\
+	interactive.cpp				\
+	non_interactive.cpp			\
 	execute.cpp				\
 	$(addprefix parser/,			\
 		Parser.cpp			\
