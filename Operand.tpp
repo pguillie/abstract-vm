@@ -74,36 +74,20 @@ const IOperand* Operand<N>::operator%(const IOperand& rhs) const
 
 		       // Bitwise operations //
 
-// float and double are not accepted: error by default.
+// Logical AND
+
+// Error if float or double.
 template <class N>
 const IOperand* Operand<N>::operator&(const IOperand& rhs
 	__attribute__((__unused__))) const
 {
 	throw OperandDomainError("invalid operand to binary operation");
 }
-
-template <class N>
-const IOperand* Operand<N>::operator|(const IOperand& rhs
-	__attribute__((__unused__))) const
-{
-	throw OperandDomainError("invalid operand to binary operation");
-}
-
-template <class N>
-const IOperand* Operand<N>::operator^(const IOperand& rhs
-	__attribute__((__unused__))) const
-{
-	throw OperandDomainError("invalid operand to binary operation");
-}
-
-// Logical AND
-
-// Error if float or double.
 template <class N>
 const std::string bitwise_and(N val, const IOperand& rhs)
 {
 	if (rhs.getType() == FLOAT || rhs.getType() == DOUBLE)
-		throw OperandDomainError("invalid operand to binary operation");
+		rhs & rhs;
 	return std::to_string(val & std::stoi(rhs.toString()));
 }
 
@@ -134,10 +118,16 @@ const IOperand* Operand<int>::operator&(const IOperand& rhs) const
 
 // Error if float or double.
 template <class N>
+const IOperand* Operand<N>::operator|(const IOperand& rhs
+	__attribute__((__unused__))) const
+{
+	throw OperandDomainError("invalid operand to binary operation");
+}
+template <class N>
 const std::string bitwise_or(N val, const IOperand& rhs)
 {
 	if (rhs.getType() == FLOAT || rhs.getType() == DOUBLE)
-		throw OperandDomainError("invalid operand to binary operation");
+		rhs & rhs;
 	return std::to_string(val | std::stoi(rhs.toString()));
 }
 
@@ -168,10 +158,16 @@ const IOperand* Operand<int>::operator|(const IOperand& rhs) const
 
 // Error if float or double.
 template <class N>
+const IOperand* Operand<N>::operator^(const IOperand& rhs
+	__attribute__((__unused__))) const
+{
+	throw OperandDomainError("invalid operand to binary operation");
+}
+template <class N>
 const std::string bitwise_xor(N val, const IOperand& rhs)
 {
 	if (rhs.getType() == FLOAT || rhs.getType() == DOUBLE)
-		throw OperandDomainError("invalid operand to binary operation");
+		rhs & rhs;
 	return std::to_string(val ^ std::stoi(rhs.toString()));
 }
 
