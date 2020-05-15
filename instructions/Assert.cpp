@@ -20,8 +20,8 @@ void Assert::execute(AbstractStack<IOperand const *> & stack) const {
 			  << (args.size() > 1 ? "s" : "") << ")\n";
 	for (Value const & val : args) {
 		if (it == stack.crend())
-			throw Instruction::StackOutOfRange(
-				"assert: no operand left on stack.");
+			throw Instruction::StackOutOfRange("assert:"
+				" no operand left on stack.");
 		op = *it;
 		if (verbose) {
 			cout << "... " << val.value << " " << type(val.type)

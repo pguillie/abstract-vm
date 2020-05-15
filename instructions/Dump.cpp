@@ -8,10 +8,10 @@ void Dump::execute(AbstractStack<IOperand const *> & stack) const {
 
 	if (verbose) {
 		cout << "[+] dump";
-		if (c) cout << " (" << c << " value" << (c > 1 ? "s" : "") << ")";
+		if (c)
+			cout << " (" << c << " value" << (c > 1 ? "s" : "")
+			     << ")";
 		cout << std::endl;
-	}
-	if (verbose) {
 		size = stack.size();
 		if (size == 0)
 			cout << "... empty stack\n";

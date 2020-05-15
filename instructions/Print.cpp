@@ -10,23 +10,21 @@ static void print(IOperand const * chr) {
 
 void Print::execute(AbstractStack<IOperand const *> & stack) const {
 	unsigned int c = (count < 0) ? -count : count;
-	unsigned int size;
+	auto it = stack.cend();
 
 	if (verbose) cout << "[+] print (" << count << " character"
 			  << (count > 1 ? "s" : "") << ")\n";
-	size = stack.size();
-	if (size < c) {
-		if (verbose)
-			cout << "... stack contains only " << size << " value"
-			     << (size > 1 ? "s" : "") << ":\n";
-		c = size;
+	if (stack.size() < c)
+		throw Instruction::StackOutOfRange("print: the stack"
+			" contains too few operands");
+	while (c--) {
+		it--;
+		if (count < 0)
+			print(*it);
 	}
 	if (count > 0)
-		for (auto it = stack.rbegin(); it != stack.rbegin() + c; it++)
-			print(*it);
-	else
-		for (auto it = stack.end() - c; it != stack.end(); it++)
-			print(*it);
+		for (c = count; c; c--)
+			print(*it++);
 	if (verbose) cout << std::endl;
 }
 
