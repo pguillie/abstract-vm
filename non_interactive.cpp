@@ -53,22 +53,36 @@ void execution(std::queue<Instruction*> instructions,
 		throw Exit::Exception();
 }
 
+static bool parsing(const std::string file,
+	std::queue<Instruction*>& instructions)
+{
+	Parser parser;
+	std::stringstream ss;
+	bool error;
+
+	if (!(file.empty() ? read_stdin(ss) : read_file(file, ss)))
+		return false;
+	parser.setSource(ss);
+	error = false;
+	while (true) {
+		try {
+			instructions = parser.source();
+			break;
+		} catch (const TokErr& e) {
+			parser.printError(file, e);
+			error = true;
+		}
+	}
+	return !error;
+}
+
 int non_interactive(const std::string file,
 	const std::map<std::string, std::string>& opt)
 {
-	std::stringstream ss;
-	Parser parser;
 	std::queue<Instruction*> instructions;
 
-	if (!(file.empty() ? read_stdin(ss) : read_file(file, ss)))
+	if (!parsing(file, instructions))
 		return 1;
-	parser.setSource(ss);
-	try {
-		instructions = parser.source();
-	} catch (const TokErr& e) {
-		parser.printError(file, e);
-		return 1;
-	}
 	try {
 		execution(instructions, opt);
 	} catch (const std::exception& e) {
