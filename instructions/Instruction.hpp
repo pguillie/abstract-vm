@@ -12,7 +12,7 @@ class Instruction {
 public:
 	virtual ~Instruction(void) { }
 
-	virtual void execute(AbstractStack<IOperand const*>& stack) const =0;
+	virtual void execute(AbstractStack<const IOperand*>& stack) const =0;
 
 	void setVerbose(bool on = true);
 
@@ -22,15 +22,15 @@ public:
 	class Exception {
 	public:
 		virtual ~Exception() { }
-		virtual char const * what() const throw() =0;
+		virtual const char* what() const throw() =0;
 	};
 
 	class StackOutOfRange: public Exception, public std::out_of_range {
 	public:
-		StackOutOfRange(char const * what_arg);
+		StackOutOfRange(const char* what_arg);
 		virtual ~StackOutOfRange() { }
 
-		char const * what() const throw();
+		const char* what() const throw();
 	};
 
 protected:
@@ -39,7 +39,8 @@ protected:
 	class StdExcept: public Exception, public std::exception {
 	public:
 		virtual ~StdExcept() { }
-		virtual char const * what() const throw() =0;
+
+		virtual const char* what() const throw() =0;
 	};
 };
 

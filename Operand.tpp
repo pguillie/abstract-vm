@@ -1,8 +1,9 @@
 template <class N>
-OperandFactory const Operand<N>::factory;
+const OperandFactory Operand<N>::factory;
 
 template <class N>
-std::string Operand<N>::stringify(N value) {
+std::string Operand<N>::stringify(N value)
+{
 	std::ostringstream os;
 
 	os << +value;
@@ -10,12 +11,14 @@ std::string Operand<N>::stringify(N value) {
 }
 
 template <class N>
-int Operand<N>::getPrecision(void) const {
+int Operand<N>::getPrecision(void) const
+{
 	return getType();
 }
 
 template <class N>
-eOperandType Operand<N>::getType(void) const {
+eOperandType Operand<N>::getType(void) const
+{
 	if (typeid(N) == typeid(int8_t)) return INT8;
 	if (typeid(N) == typeid(int16_t)) return INT16;
 	if (typeid(N) == typeid(int32_t)) return INT32;
@@ -24,28 +27,32 @@ eOperandType Operand<N>::getType(void) const {
 }
 
 template <class N>
-IOperand const * Operand<N>::operator+(IOperand const & rhs) const {
+const IOperand* Operand<N>::operator+(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		std::to_string(value + std::stod(rhs.toString())));
 }
 
 template <class N>
-IOperand const * Operand<N>::operator-(IOperand const & rhs) const {
+const IOperand* Operand<N>::operator-(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		std::to_string(value - std::stod(rhs.toString())));
 }
 
 template <class N>
-IOperand const * Operand<N>::operator*(IOperand const & rhs) const {
+const IOperand* Operand<N>::operator*(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		std::to_string(value * std::stod(rhs.toString())));
 }
 
 template <class N>
-IOperand const * Operand<N>::operator/(IOperand const & rhs) const {
+const IOperand* Operand<N>::operator/(const IOperand& rhs) const
+{
 	double r = std::stod(rhs.toString());
 
 	if (r == 0)
@@ -55,7 +62,8 @@ IOperand const * Operand<N>::operator/(IOperand const & rhs) const {
 }
 
 template <class N>
-IOperand const * Operand<N>::operator%(IOperand const & rhs) const {
+const IOperand* Operand<N>::operator%(const IOperand& rhs) const
+{
 	double r = std::stod(rhs.toString());
 
 	if (r == 0)
@@ -68,20 +76,23 @@ IOperand const * Operand<N>::operator%(IOperand const & rhs) const {
 
 // float and double are not accepted: error by default.
 template <class N>
-IOperand const * Operand<N>::operator&(IOperand const & rhs
-	__attribute__((__unused__))) const {
+const IOperand* Operand<N>::operator&(const IOperand& rhs
+	__attribute__((__unused__))) const
+{
 	throw OperandDomainError("invalid operand to binary operation");
 }
 
 template <class N>
-IOperand const * Operand<N>::operator|(IOperand const & rhs
-	__attribute__((__unused__))) const {
+const IOperand* Operand<N>::operator|(const IOperand& rhs
+	__attribute__((__unused__))) const
+{
 	throw OperandDomainError("invalid operand to binary operation");
 }
 
 template <class N>
-IOperand const * Operand<N>::operator^(IOperand const & rhs
-	__attribute__((__unused__))) const {
+const IOperand* Operand<N>::operator^(const IOperand& rhs
+	__attribute__((__unused__))) const
+{
 	throw OperandDomainError("invalid operand to binary operation");
 }
 
@@ -89,7 +100,8 @@ IOperand const * Operand<N>::operator^(IOperand const & rhs
 
 // Error if float or double.
 template <class N>
-std::string const bitwise_and(N val, IOperand const & rhs) {
+const std::string bitwise_and(N val, const IOperand& rhs)
+{
 	if (rhs.getType() == FLOAT || rhs.getType() == DOUBLE)
 		throw OperandDomainError("invalid operand to binary operation");
 	return std::to_string(val & std::stoi(rhs.toString()));
@@ -97,19 +109,22 @@ std::string const bitwise_and(N val, IOperand const & rhs) {
 
 // template specializations for integer types
 template <> inline
-IOperand const * Operand<int8_t>::operator&(IOperand const & rhs) const {
+const IOperand* Operand<int8_t>::operator&(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_and(value, rhs));
 }
 template <> inline
-IOperand const * Operand<short>::operator&(IOperand const & rhs) const {
+const IOperand* Operand<short>::operator&(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_and(value, rhs));
 }
 template <> inline
-IOperand const * Operand<int>::operator&(IOperand const & rhs) const {
+const IOperand* Operand<int>::operator&(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_and(value, rhs));
@@ -119,7 +134,8 @@ IOperand const * Operand<int>::operator&(IOperand const & rhs) const {
 
 // Error if float or double.
 template <class N>
-std::string const bitwise_or(N val, IOperand const & rhs) {
+const std::string bitwise_or(N val, const IOperand& rhs)
+{
 	if (rhs.getType() == FLOAT || rhs.getType() == DOUBLE)
 		throw OperandDomainError("invalid operand to binary operation");
 	return std::to_string(val | std::stoi(rhs.toString()));
@@ -127,19 +143,22 @@ std::string const bitwise_or(N val, IOperand const & rhs) {
 
 // template specializations for integer types
 template <> inline
-IOperand const * Operand<int8_t>::operator|(IOperand const & rhs) const {
+const IOperand* Operand<int8_t>::operator|(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_or(value, rhs));
 }
 template <> inline
-IOperand const * Operand<short>::operator|(IOperand const & rhs) const {
+const IOperand* Operand<short>::operator|(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_or(value, rhs));
 }
 template <> inline
-IOperand const * Operand<int>::operator|(IOperand const & rhs) const {
+const IOperand* Operand<int>::operator|(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_or(value, rhs));
@@ -149,7 +168,8 @@ IOperand const * Operand<int>::operator|(IOperand const & rhs) const {
 
 // Error if float or double.
 template <class N>
-std::string const bitwise_xor(N val, IOperand const & rhs) {
+const std::string bitwise_xor(N val, const IOperand& rhs)
+{
 	if (rhs.getType() == FLOAT || rhs.getType() == DOUBLE)
 		throw OperandDomainError("invalid operand to binary operation");
 	return std::to_string(val ^ std::stoi(rhs.toString()));
@@ -157,25 +177,29 @@ std::string const bitwise_xor(N val, IOperand const & rhs) {
 
 // template specializations for integer types
 template <> inline
-IOperand const * Operand<int8_t>::operator^(IOperand const & rhs) const {
+const IOperand* Operand<int8_t>::operator^(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_xor(value, rhs));
 }
 template <> inline
-IOperand const * Operand<short>::operator^(IOperand const & rhs) const {
+const IOperand* Operand<short>::operator^(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_xor(value, rhs));
 }
 template <> inline
-IOperand const * Operand<int>::operator^(IOperand const & rhs) const {
+const IOperand* Operand<int>::operator^(const IOperand& rhs) const
+{
 	return factory.createOperand((getPrecision() < rhs.getPrecision()) ?
 		rhs.getType() : getType(),
 		bitwise_xor(value, rhs));
 }
 
 template <class N>
-std::string const & Operand<N>::toString(void) const {
+const std::string& Operand<N>::toString(void) const
+{
 	return str;
 };

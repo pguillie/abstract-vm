@@ -1,6 +1,7 @@
 #include "Lexer.hpp"
 
-static LexicalErr error(std::istream & source, int index, int len) {
+static LexicalErr error(std::istream& source, int index, int len)
+{
 	int line, col, line_pos;
 	std::string str, lexeme;
 
@@ -17,7 +18,8 @@ static LexicalErr error(std::istream & source, int index, int len) {
 	return LexicalErr(line, col, len, lexeme);
 }
 
-static Token const word(std::istream & source) {
+static const Token word(std::istream& source)
+{
 	std::set<std::string>::iterator search;
 	std::string str;
 	int index = source.tellg();
@@ -33,7 +35,8 @@ static Token const word(std::istream & source) {
 	throw error(source, index, str.length());
 }
 
-static Token const number(std::istream & source) {
+static const Token number(std::istream& source)
+{
 	std::string str;
 	int index = source.tellg();
 	int digit = 0;
@@ -57,7 +60,8 @@ static Token const number(std::istream & source) {
 		str.length());
 }
 
-Token const Lexer::get(std::istream & source) {
+const Token Lexer::get(std::istream& source)
+{
 	char c;
 
 	while (std::isblank(source.peek()))
@@ -89,7 +93,8 @@ Token const Lexer::get(std::istream & source) {
 			   // Exceptions //
 
 LexicalErr::LexicalErr(int line, int col, int len, std::string str):
-	line_(line), column_(col), length_(len) {
+	line_(line), column_(col), length_(len)
+{
 	std::stringstream ss;
 	std::string::iterator i;
 
@@ -101,18 +106,22 @@ LexicalErr::LexicalErr(int line, int col, int len, std::string str):
 	message_ = ss.str();
 }
 
-char const * LexicalErr::what() const throw() {
+const char* LexicalErr::what() const throw()
+{
 	return message_.c_str();
 }
 
-int LexicalErr::line() const {
+int LexicalErr::line() const
+{
 	return line_;
 }
 
-int LexicalErr::column() const {
+int LexicalErr::column() const
+{
 	return column_;
 }
 
-int LexicalErr::length() const {
+int LexicalErr::length() const
+{
 	return length_;
 }

@@ -8,17 +8,17 @@ public:
 	Print(int count = 1);
 	virtual ~Print() { }
 
-	void execute(AbstractStack<IOperand const *> &) const;
+	void execute(AbstractStack<const IOperand*>&) const;
 
 	class TypeException: public Instruction::StdExcept {
 	public:
 //		TypeException();
 		virtual ~TypeException() { }
-		char const * what() const throw();
+		const char* what() const throw();
 	};
 
 private:
-	int const count;
+	const int count;
 };
 
 #endif // INSTRUCTIONS_PRINT_H

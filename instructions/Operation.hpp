@@ -12,17 +12,17 @@ class Operation: public Instruction {
 public:
 	enum class Type { add, sub, mul, div, mod, bw_and, bw_or, bw_xor };
 
-	Operation(enum Type op, std::vector<Value> const &);
+	Operation(enum Type op, const std::vector<Value>&);
 	virtual ~Operation() { }
 
-	void execute(AbstractStack<IOperand const *> &) const;
+	void execute(AbstractStack<const IOperand*>&) const;
 
 private:
-	void calc(AbstractStack<IOperand const *> &, IOperand const *) const;
+	void calc(AbstractStack<const IOperand*>&, const IOperand*) const;
 
-	enum Type const op;
-	std::vector<Value> const args;
-	static OperandFactory const factory;
+	const enum Type op;
+	const std::vector<Value> args;
+	static const OperandFactory factory;
 };
 
 #endif // INSTRUCTIONS_OPERATION_H_

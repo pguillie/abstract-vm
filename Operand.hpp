@@ -21,21 +21,21 @@ public:
 	int getPrecision(void) const;
 	eOperandType getType(void) const;
 
-	IOperand const * operator+(IOperand const & rhs) const;
-	IOperand const * operator-(IOperand const & rhs) const;
-	IOperand const * operator*(IOperand const & rhs) const;
-	IOperand const * operator/(IOperand const & rhs) const;
-	IOperand const * operator%(IOperand const & rhs) const;
-	IOperand const * operator&(IOperand const & rhs) const;
-	IOperand const * operator|(IOperand const & rhs) const;
-	IOperand const * operator^(IOperand const & rhs) const;
+	const IOperand* operator+(const IOperand& rhs) const;
+	const IOperand* operator-(const IOperand& rhs) const;
+	const IOperand* operator*(const IOperand& rhs) const;
+	const IOperand* operator/(const IOperand& rhs) const;
+	const IOperand* operator%(const IOperand& rhs) const;
+	const IOperand* operator&(const IOperand& rhs) const;
+	const IOperand* operator|(const IOperand& rhs) const;
+	const IOperand* operator^(const IOperand& rhs) const;
 
-	std::string const & toString(void) const;
+	const std::string& toString(void) const;
 
 protected:
-	N const value;
-	std::string const str;
-	static OperandFactory const factory;
+	const N value;
+	const std::string str;
+	static const OperandFactory factory;
 
 private:
 	std::string stringify(N value);

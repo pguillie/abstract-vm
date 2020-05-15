@@ -2,12 +2,13 @@
 
 OperandFactory const Operation::factory;
 
-Operation::Operation(enum Type op, std::vector<Value> const & args):
+Operation::Operation(enum Type op, const std::vector<Value>& args):
 	op(op),
 	args(args)
 { }
 
-static std::string OpeName(Operation::Type op) {
+static std::string OpeName(Operation::Type op)
+{
 	switch (op) {
 	case (Operation::Type::add): return "add";
 	case (Operation::Type::sub): return "sub";
@@ -20,7 +21,8 @@ static std::string OpeName(Operation::Type op) {
 	}
 }
 
-static std::string OpeSymb(Operation::Type op) {
+static std::string OpeSymb(Operation::Type op)
+{
 	switch (op) {
 	case (Operation::Type::add): return " + ";
 	case (Operation::Type::sub): return " - ";
@@ -33,16 +35,18 @@ static std::string OpeSymb(Operation::Type op) {
 	}
 }
 
-Instruction::StackOutOfRange error(Operation::Type op) {
+Instruction::StackOutOfRange error(Operation::Type op)
+{
 	std::ostringstream os;
 
 	os << OpeName(op) << ": no operand left on stack.";
 	return Instruction::StackOutOfRange(os.str().c_str());
 }
 
-void Operation::calc(AbstractStack<IOperand const *> & stack,
-	IOperand const * rhs) const {
-	IOperand const * lhs;
+void Operation::calc(AbstractStack<const IOperand*> & stack,
+	const IOperand* rhs) const
+{
+	const IOperand* lhs;
 
 	if (stack.empty())
 		throw error(op);
@@ -66,8 +70,9 @@ void Operation::calc(AbstractStack<IOperand const *> & stack,
 	delete rhs;
 }
 
-void Operation::execute(AbstractStack<IOperand const *> & stack) const {
-	IOperand const * rhs;
+void Operation::execute(AbstractStack<const IOperand*> & stack) const
+{
+	const IOperand* rhs;
 
 	if (verbose) {
 		cout << "[+] " << OpeName(op);
@@ -86,7 +91,7 @@ void Operation::execute(AbstractStack<IOperand const *> & stack) const {
 			     << rhs->toString() << "\n";
 		calc(stack, rhs);
 	}
-	for (Value const & val : args) {
+	for (const Value& val : args) {
 		rhs = factory.createOperand(val.type, val.value);
 		if (verbose)
 			cout << "..| retrieve 'rhs' from arguments: "

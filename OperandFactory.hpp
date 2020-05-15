@@ -6,22 +6,22 @@
 #include "IOperand.hpp"
 
 class OperandFactory;
-typedef IOperand const * (OperandFactory::*createFunc)
-	(std::string const & value) const;
+typedef const IOperand* (OperandFactory::*fptrCreate)(const std::string& value)
+	const;
 
 class OperandFactory {
 public:
-	IOperand const * createOperand(eOperandType type,
-		std::string const & value) const;
+	const IOperand* createOperand(eOperandType type, const std::string& value)
+		const;
 
 private:
-	IOperand const * createInt8(std::string const & value) const;
-	IOperand const * createInt16(std::string const & value) const;
-	IOperand const * createInt32(std::string const & value) const;
-	IOperand const * createFloat(std::string const & value) const;
-	IOperand const * createDouble(std::string const & value) const;
+	const IOperand* createInt8(const std::string& value) const;
+	const IOperand* createInt16(const std::string& value) const;
+	const IOperand* createInt32(const std::string& value) const;
+	const IOperand* createFloat(const std::string& value) const;
+	const IOperand* createDouble(const std::string& value) const;
 
-	static createFunc const create[5];
+	static const fptrCreate createType[5];
 };
 
 #endif // OPERANDFACTORY_H_

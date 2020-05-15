@@ -1,8 +1,11 @@
 #include "Dump.hpp"
 
-Dump::Dump(int count): count(count < 0 ? 0 : count) { }
+Dump::Dump(int count):
+	count(count < 0 ? 0 : count)
+{ }
 
-void Dump::execute(AbstractStack<IOperand const *> & stack) const {
+void Dump::execute(AbstractStack<const IOperand*> & stack) const
+{
 	int c = count;
 	int size;
 

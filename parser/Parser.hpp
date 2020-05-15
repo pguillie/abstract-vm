@@ -27,16 +27,16 @@ public:
 		TokType actual, std::string str);
 	virtual ~SyntaxErr(void) { }
 
-	char const * what(void) const throw();
+	const char* what(void) const throw();
 	int line() const;
 	int column() const;
 	int length() const;
 
 private:
 	std::string message_;
-	int const line_;
-	int const column_;
-	int const length_;
+	const int line_;
+	const int column_;
+	const int length_;
 };
 
 class Parser;
@@ -49,28 +49,28 @@ public:
 	// Parser(Parser const & other) =delete;
 	// Parser & operator=(Parser const & rhs) =delete;
 
-	std::queue<Instruction *> source();
-	Instruction * instruction();
+	std::queue<Instruction*> source();
+	Instruction* instruction();
 
 	void setSource(std::stringstream& source);
-	void printError(std::string file, TokErr const & e);
+	void printError(std::string file, const TokErr& e);
 
 private:
-	Instruction * avm_push();
-	Instruction * avm_pop();
-	Instruction * avm_dump();
-	Instruction * avm_assert();
-	Instruction * avm_add();
-	Instruction * avm_sub();
-	Instruction * avm_mul();
-	Instruction * avm_div();
-	Instruction * avm_mod();
-	Instruction * avm_and();
-	Instruction * avm_or();
-	Instruction * avm_xor();
-	Instruction * avm_operation(Operation::Type op);
-	Instruction * avm_print();
-	Instruction * avm_exit();
+	Instruction* avm_push();
+	Instruction* avm_pop();
+	Instruction* avm_dump();
+	Instruction* avm_assert();
+	Instruction* avm_add();
+	Instruction* avm_sub();
+	Instruction* avm_mul();
+	Instruction* avm_div();
+	Instruction* avm_mod();
+	Instruction* avm_and();
+	Instruction* avm_or();
+	Instruction* avm_xor();
+	Instruction* avm_operation(Operation::Type op);
+	Instruction* avm_print();
+	Instruction* avm_exit();
 
 	std::vector<Value> value_args(unsigned int min);
 	Value value(Token t);

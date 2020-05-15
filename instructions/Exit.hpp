@@ -8,12 +8,12 @@ public:
 	Exit();
 	virtual ~Exit() { }
 
-	void execute(AbstractStack<IOperand const *> &) const;
+	void execute(AbstractStack<const IOperand*>&) const;
 
 	class Exception: public std::exception {
 	public:
 		virtual ~Exception() { }
-		char const * what() const throw();
+		const char* what() const throw();
 	};
 };
 

@@ -2,7 +2,8 @@
 #include <map>
 #include <string>
 
-void invoc_help(std::string const & name, bool exhaustive) {
+void invoc_help(const std::string& name, bool exhaustive)
+{
 	std::cout << "Usage: " << name << " [OPTION ...] [FILE]\n";
 	if (exhaustive) {
 		std::cout << "\nOPTION:\n"
@@ -15,8 +16,9 @@ void invoc_help(std::string const & name, bool exhaustive) {
 	}
 }
 
-bool long_opt(std::string const & name, std::string const arg,
-	std::map<std::string, std::string> & opt) {
+bool long_opt(const std::string& name, const std::string arg,
+	std::map<std::string, std::string>& opt)
+{
 	if (arg == "help") {
 		opt["help"] = "";
 	} else if (arg == "interactive") {
@@ -30,8 +32,9 @@ bool long_opt(std::string const & name, std::string const arg,
 	return true;
 }
 
-bool short_opt(std::string const & name, std::string const arg,
-	std::map<std::string, std::string> & opt) {
+bool short_opt(const std::string& name, const std::string arg,
+	std::map<std::string, std::string>& opt)
+{
 	for (auto c = arg.cbegin(); c != arg.cend(); c++) {
 		switch (*c) {
 		case 'i': opt["interactive"] = ""; break;
@@ -45,7 +48,8 @@ bool short_opt(std::string const & name, std::string const arg,
 	return true;
 }
 
-bool set_file(char ** av, std::string & file) {
+bool set_file(char** av, std::string& file)
+{
 	if (*av)
 		file = *av++;
 	else
@@ -55,8 +59,9 @@ bool set_file(char ** av, std::string & file) {
 	return true;
 }
 
-bool invocation(char * av[], std::map<std::string, std::string> & opt,
-	std::string & file) {
+bool invocation(char* av[], std::map<std::string, std::string>& opt,
+	std::string& file)
+{
 	std::string name;
 
 	name = *av++;

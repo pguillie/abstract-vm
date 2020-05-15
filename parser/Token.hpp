@@ -15,7 +15,7 @@ enum class TokType {
 class TokErr: public virtual std::exception {
 public:
 	virtual ~TokErr(void) { }
-	virtual char const * what(void) const throw() =0;
+	virtual const char* what(void) const throw() =0;
 	virtual int line() const =0;
 	virtual int column() const =0;
 	virtual int length() const =0;
@@ -27,10 +27,10 @@ public:
 	Token(void) =default;
 	Token(enum TokType type, int index, int length = 1);
 	virtual ~Token(void) { };
-	// Token(Token const & copy);
-	// Token & operator=(Token const & copy);
-	// Token(Token && move) =delete;
-	// Token & operator=(Token && copy) =delete;
+	// Token(const Token& copy);
+	// Token & operator=(const Token& copy);
+	// Token(Token&& move) =delete;
+	// Token & operator=(Token&& copy) =delete;
 
 	enum TokType type(void) const;
 	int index(void) const;

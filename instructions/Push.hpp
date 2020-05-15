@@ -9,14 +9,14 @@
 
 class Push: public Instruction {
 public:
-	Push(std::vector<Value> const &);
+	Push(const std::vector<Value>&);
 	virtual ~Push(void) { }
 
-	void execute(AbstractStack<IOperand const *> &) const;
+	void execute(AbstractStack<const IOperand*>&) const;
 
 private:
-	std::vector<Value> const args;
-	static OperandFactory const factory;
+	const std::vector<Value> args;
+	static const OperandFactory factory;
 };
 
 #endif // INSTRUCTIONS_PUSH_H_

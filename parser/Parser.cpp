@@ -17,22 +17,25 @@ std::map<std::string, fptr> Parser::instructions = {
 	{"xor", &Parser::avm_xor}
 };
 
-Token Parser::assert(Token token, TokType type) {
+Token Parser::assert(Token token, TokType type)
+{
 	if (token.type() != type)
 		throw error(token, type);
 	return token;
 }
 
-std::queue<Instruction *> Parser::source() {
-	std::queue<Instruction *> instructions;
-	Instruction * i;
+std::queue<Instruction*> Parser::source()
+{
+	std::queue<Instruction*> instructions;
+	Instruction* i;
 
 	while ((i = instruction()))
 		instructions.push(i);
 	return instructions;
 }
 
-Instruction * Parser::instruction() {
+Instruction* Parser::instruction()
+{
 	Token t;
 	std::string lexeme;
 
@@ -48,68 +51,83 @@ Instruction * Parser::instruction() {
 	return (this->*instructions.at(lexeme))();
 }
 
-Instruction * Parser::avm_push() {
+Instruction* Parser::avm_push() {
 	return new Push(value_args(1));
 }
 
-Instruction * Parser::avm_pop() {
+Instruction* Parser::avm_pop()
+{
 	return new Pop(int_arg());
 }
 
-Instruction * Parser::avm_dump() {
+Instruction* Parser::avm_dump()
+{
 	return new Dump(int_arg());
 }
 
-Instruction * Parser::avm_assert() {
+Instruction* Parser::avm_assert()
+{
 	return new Assert(value_args(1));
 }
 
-Instruction * Parser::avm_operation(Operation::Type op) {
+Instruction* Parser::avm_operation(Operation::Type op)
+{
 	return new Operation(op, value_args(0));
 }
 
-Instruction * Parser::avm_add() {
+Instruction* Parser::avm_add()
+{
 	return avm_operation(Operation::Type::add);
 }
 
-Instruction * Parser::avm_sub() {
+Instruction* Parser::avm_sub()
+{
 	return avm_operation(Operation::Type::sub);
 }
 
-Instruction * Parser::avm_mul() {
+Instruction* Parser::avm_mul()
+{
 	return avm_operation(Operation::Type::mul);
 }
 
-Instruction * Parser::avm_div() {
+Instruction* Parser::avm_div()
+{
 	return avm_operation(Operation::Type::div);
 }
 
-Instruction * Parser::avm_mod() {
+Instruction* Parser::avm_mod()
+{
 	return avm_operation(Operation::Type::mod);
 }
 
-Instruction * Parser::avm_and() {
+Instruction* Parser::avm_and()
+{
 	return avm_operation(Operation::Type::bw_and);
 }
 
-Instruction * Parser::avm_or() {
+Instruction* Parser::avm_or()
+{
 	return avm_operation(Operation::Type::bw_or);
 }
 
-Instruction * Parser::avm_xor() {
+Instruction* Parser::avm_xor()
+{
 	return avm_operation(Operation::Type::bw_xor);
 }
 
-Instruction * Parser::avm_print() {
+Instruction* Parser::avm_print()
+{
 	return new Print(int_arg());
 }
 
-Instruction * Parser::avm_exit() {
+Instruction* Parser::avm_exit()
+{
 	assert(Lexer::get(source_), TokType::newline);
 	return new Exit();
 }
 
-std::vector<Value> Parser::value_args(unsigned int req) {
+std::vector<Value> Parser::value_args(unsigned int req)
+{
 	Token t;
 	std::vector<Value> args;
 
@@ -137,7 +155,8 @@ std::vector<Value> Parser::value_args(unsigned int req) {
 	return args;
 }
 
-Value Parser::value(Token t) {
+Value Parser::value(Token t)
+{
 	Value val;
 	std::string type;
 
@@ -156,7 +175,8 @@ Value Parser::value(Token t) {
 	return val;
 }
 
-int Parser::int_arg() {
+int Parser::int_arg()
+{
 	Token t;
 	int arg = 0;
 
@@ -169,7 +189,8 @@ int Parser::int_arg() {
 	return arg;
 }
 
-SyntaxErr Parser::error(Token token, TokType type) {
+SyntaxErr Parser::error(Token token, TokType type)
+{
 	int index, line, col, line_pos;
 	std::string lexeme;
 
@@ -192,11 +213,13 @@ SyntaxErr Parser::error(Token token, TokType type) {
 	return SyntaxErr(line, col, token.length(), type, token.type(), lexeme);
 }
 
-void Parser::setSource(std::stringstream& source) {
+void Parser::setSource(std::stringstream& source)
+{
 	source_.swap(source);
 }
 
-void Parser::printError(std::string file, TokErr const & tok) {
+void Parser::printError(std::string file, const TokErr& tok)
+{
 	std::string str;
 	int i;
 
@@ -220,7 +243,8 @@ void Parser::printError(std::string file, TokErr const & tok) {
 
 SyntaxErr::SyntaxErr(int line, int col, int len, TokType expected,
 	TokType actual, std::string str):
-	line_(line), column_(col), length_(len) {
+	line_(line), column_(col), length_(len)
+{
 	std::stringstream ss;
 
 	ss << "error: expected "
@@ -231,18 +255,22 @@ SyntaxErr::SyntaxErr(int line, int col, int len, TokType expected,
 	message_ = ss.str();
 }
 
-char const * SyntaxErr::what() const throw() {
+const char* SyntaxErr::what() const throw()
+{
 	return message_.c_str();
 }
 
-int SyntaxErr::line() const {
+int SyntaxErr::line() const
+{
 	return line_;
 }
 
-int SyntaxErr::column() const {
+int SyntaxErr::column() const
+{
 	return column_;
 }
 
-int SyntaxErr::length() const {
+int SyntaxErr::length() const
+{
 	return length_;
 }

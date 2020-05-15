@@ -1,21 +1,26 @@
 #include "Token.hpp"
 
 Token::Token(enum TokType type, int index, int length):
-	type_(type), index_(index), length_(length) { }
+	type_(type), index_(index), length_(length)
+{ }
 
-enum TokType Token::type() const {
+enum TokType Token::type() const
+{
 	return type_;
 }
 
-int Token::index() const {
+int Token::index() const
+{
 	return index_;
 }
 
-int Token::length() const {
+int Token::length() const
+{
 	return length_;
 }
 
-std::string Token::toString(TokType type) {
+std::string Token::toString(TokType type)
+{
 	switch (type) {
 	case TokType::instruction:
 		return "instruction";

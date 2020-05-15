@@ -1,8 +1,10 @@
 #include "Exit.hpp"
 
-Exit::Exit() { }
+Exit::Exit()
+{ }
 
-void Exit::execute(AbstractStack<IOperand const *> & stack) const {
+void Exit::execute(AbstractStack<const IOperand*> & stack) const
+{
 	if (verbose) cout << "[+] exit\n";
 	while (!stack.empty()) {
 		delete stack.top();
@@ -12,6 +14,7 @@ void Exit::execute(AbstractStack<IOperand const *> & stack) const {
 
 			   // Exceptions //
 
-char const * Exit::Exception::what() const throw() {
+const char* Exit::Exception::what() const throw()
+{
 	return "no exit instruction.";
 }

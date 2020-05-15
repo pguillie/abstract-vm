@@ -1,8 +1,11 @@
 #include "Assert.hpp"
 
-Assert::Assert(std::vector<Value> const & args): args(args) { }
+Assert::Assert(const std::vector<Value>& args):
+	args(args)
+{ }
 
-static std::string type(eOperandType t) {
+static std::string type(eOperandType t)
+{
 	switch (t) {
 	case (INT8): return "(int8)";
 	case (INT16): return "(int16)";
@@ -12,13 +15,14 @@ static std::string type(eOperandType t) {
 	}
 }
 
-void Assert::execute(AbstractStack<IOperand const *> & stack) const {
-	IOperand const * op;
+void Assert::execute(AbstractStack<const IOperand*> & stack) const
+{
+	const IOperand* op;
 	auto it = stack.crbegin();
 
 	if (verbose) cout << "[+] assert (" << args.size() << " value"
 			  << (args.size() > 1 ? "s" : "") << ")\n";
-	for (Value const & val : args) {
+	for (const Value& val : args) {
 		if (it == stack.crend())
 			throw Instruction::StackOutOfRange("assert:"
 				" no operand left on stack.");
@@ -43,10 +47,12 @@ void Assert::execute(AbstractStack<IOperand const *> & stack) const {
 
 			   // Exceptions //
 
-Assert::Exception::Exception(enum Wrong cause): cause(cause) {
-}
+Assert::Exception::Exception(enum Wrong cause):
+	cause(cause)
+{ }
 
-char const * Assert::Exception::what() const throw() {
+const char* Assert::Exception::what() const throw()
+{
 	switch (cause) {
 	case Wrong::type:
 		return "Assertion error: the operands have different types.";

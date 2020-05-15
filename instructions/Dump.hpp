@@ -8,10 +8,10 @@ public:
 	Dump(int count = 0);
 	virtual ~Dump() { }
 
-	void execute(AbstractStack<IOperand const *> &) const;
+	void execute(AbstractStack<const IOperand*>&) const;
 
 private:
-	int const count;
+	const int count;
 };
 
 #endif // INSTRUCTIONS_DUMP_H

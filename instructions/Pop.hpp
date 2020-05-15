@@ -8,7 +8,7 @@ public:
 	Pop(int count = 1);
 	virtual ~Pop(void) { }
 
-	void execute(AbstractStack<IOperand const *> &) const;
+	void execute(AbstractStack<const IOperand*>&) const;
 
 private:
 	int const count;

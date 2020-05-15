@@ -8,8 +8,8 @@
 #include "AbstractStack.hpp"
 #include "instructions/Instruction.hpp"
 
-bool invocation(char ** av, std::map<std::string, std::string> & opt,
-	std::string & file);
+bool invocation(char** av, std::map<std::string, std::string>& opt,
+	std::string& file);
 
 int interactive(const std::map<std::string, std::string>& opt);
 

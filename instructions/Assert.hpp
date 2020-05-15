@@ -8,10 +8,10 @@
 
 class Assert: public Instruction {
 public:
-	Assert(std::vector<Value> const &);
+	Assert(const std::vector<Value>&);
 	virtual ~Assert() { }
 
-	void execute(AbstractStack<IOperand const *> &) const;
+	void execute(AbstractStack<const IOperand*> &) const;
 
 	enum class Wrong { type, value };
 
@@ -19,13 +19,15 @@ public:
 	public:
 		Exception(enum Wrong cause);
 		virtual ~Exception() { }
-		char const * what() const throw();
+
+		const char* what() const throw();
+
 	private:
 		enum Wrong cause;
 	};
 
 private:
-	std::vector<Value> const args;
+	const std::vector<Value> args;
 };
 
 #endif // INSTRUCTIONS_ASSERT_H
