@@ -6,9 +6,9 @@ void invoc_help(const std::string& name, bool exhaustive)
 {
 	std::cout << "Usage: " << name << " [OPTION ...] [FILE]\n";
 	if (exhaustive) {
-		std::cout << "\nOPTION:\n"
+		std::cout << "\nOPTIONS:\n"
 			  << " -i, --interactive\n"
-			  << "\trun the interpreter interactively\n"
+			  << "\trun the interpreter in interactive mode (stdin)\n"
 			  << " -v, --verbose\n"
 			  << "\texplain what is being done\n"
 			  << " --help\n"
@@ -66,9 +66,13 @@ bool invocation(char* av[], std::map<std::string, std::string>& opt,
 
 	name = *av++;
 	while (*av && (*av)[0] == '-') {
+		if ((*av)[1] == '\0')
+			break;
 		if ((*av)[1] == '-') {
-			if ((*av)[2] == '\0')
+			if ((*av)[2] == '\0') {
+				av++;
 				break;
+			}
 			if (!long_opt(name, *av + 2, opt))
 				return false;
 		} else {

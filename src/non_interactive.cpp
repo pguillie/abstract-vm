@@ -5,6 +5,11 @@
 #include "Parser/Parser.hpp"
 #include "Operand/OperandExceptions.hpp"
 
+#define read_source(file, stream)			\
+	(((file).empty())				\
+		? read_stdin((stream))			\
+		: read_file((file), (stream)))
+
 static bool read_file(std::string file, std::iostream& ss)
 {
 	std::ifstream ifs;
@@ -44,7 +49,7 @@ static bool parse(const std::string file,
 	std::stringstream ss;
 	bool error;
 
-	if (!(file.empty() ? read_stdin(ss) : read_file(file, ss)))
+	if (!read_source(file, ss))
 		return false;
 	parser.setSource(ss);
 	error = false;
