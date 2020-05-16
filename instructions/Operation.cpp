@@ -56,7 +56,7 @@ void Operation::calc(AbstractStack<const IOperand*>& stack,
 	lhs = stack.top();
 	if (verbose)
 		cout << "..| retrieve 'lhs' from stack: "
-		     << lhs->toString() << "\n";
+		     << lhs->toString() << std::endl;
 	stack.top() = (op == Type::add) ? *lhs + *rhs
 		: (op == Type::sub) ? *lhs - *rhs
 		: (op == Type::mul) ? *lhs * *rhs
@@ -70,12 +70,13 @@ void Operation::calc(AbstractStack<const IOperand*>& stack,
 		     << rhs->toString() << " = " << stack.top()->toString()
 		     << std::endl;
 	delete lhs;
-	delete rhs;
 }
 
 void Operation::execute(AbstractStack<const IOperand*>& stack) const
 {
+	auto arg = args.begin();
 	const IOperand* rhs;
+	std::string loc;
 
 	if (verbose) {
 		cout << "[+] " << OpeName(op);
@@ -84,21 +85,27 @@ void Operation::execute(AbstractStack<const IOperand*>& stack) const
 			     << (args.size() > 1 ? "s" : "") << ")";
 		cout << std::endl;
 	}
-	if (args.empty()) {
-		if (stack.empty())
-			throw error(op);
-		rhs = stack.top();
-		stack.pop();
+	do {
+		if (!args.empty()) {
+			rhs = factory.createOperand(arg->type, arg->value);
+			loc = "arguments";
+			arg++;
+		} else {
+			if (stack.empty())
+				throw error(op);
+			rhs = stack.top();
+			stack.pop();
+			loc = "statck";
+		}
 		if (verbose)
-			cout << "..| retrieve 'rhs' from stack: "
-			     << rhs->toString() << "\n";
-		calc(stack, rhs);
-	}
-	for (const Value& val : args) {
-		rhs = factory.createOperand(val.type, val.value);
-		if (verbose)
-			cout << "..| retrieve 'rhs' from arguments: "
-			     << rhs->toString() << "\n";
-		calc(stack, rhs);
-	}
+			cout << "..| retrieve 'rhs' from " << loc << ": "
+			     << rhs->toString() << std::endl;
+		try {
+			calc(stack, rhs);
+		} catch (...) {
+			delete rhs;
+			throw;
+		}
+		delete rhs;
+	} while (arg != args.end());
 }

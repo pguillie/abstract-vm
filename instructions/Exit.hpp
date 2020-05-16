@@ -14,6 +14,8 @@ public:
 
 	void execute(AbstractStack<const IOperand*>& stack) const;
 
+	static void clean(AbstractStack<const IOperand*>& stack);
+
 	class Exception: public std::exception {
 	public:
 		Exception(void);

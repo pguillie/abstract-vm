@@ -35,8 +35,16 @@ std::queue<Instruction*> Parser::source()
 	std::queue<Instruction*> instructions;
 	Instruction* i;
 
-	while ((i = instruction()))
-		instructions.push(i);
+	try {
+		while ((i = instruction()))
+			instructions.push(i);
+	} catch (...) {
+		while (!instructions.empty()) {
+			delete instructions.front();
+			instructions.pop();
+		}
+		throw;
+	}
 	return instructions;
 }
 

@@ -18,8 +18,9 @@ static bool read_stdin(std::iostream& ss)
 	return true;
 }
 
-static Instruction* getInstruction(Parser& parser)
+static Instruction* parse(void)
 {
+	Parser parser;
 	Instruction* instruction;
 	std::stringstream ss;
 
@@ -41,21 +42,22 @@ static Instruction* getInstruction(Parser& parser)
 int interactive(const std::map<std::string, std::string>& opt)
 {
 	AbstractStack<const IOperand*> stack;
-	Parser parser;
 	Instruction* instruction;
-	bool exited;
+	bool proceed;
 
 	do {
-		instruction = getInstruction(parser);
+		instruction = parse();
 		try {
 			if (!instruction)
 				throw Exit::Exception();
-			exited = execute(*instruction, stack, opt);
+			proceed = execute(*instruction, stack, opt);
 		} catch (const std::exception& e) {
 			std::cerr << "Error: " << e.what() << std::endl;
+			Exit::clean(stack);
+			delete instruction;
 			return 1;
 		}
 		delete instruction;
-	} while (!exited);
+	} while (proceed);
 	return 0;
 }

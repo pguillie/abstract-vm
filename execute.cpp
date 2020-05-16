@@ -23,7 +23,7 @@ bool execute(Instruction& instruction, AbstractStack<const IOperand*>& stack,
 	}
 	try {
 		(void)dynamic_cast<Exit&>(instruction);
-		return true;
+		return false;
 	} catch (...) { }
-	return false;
+	return true;
 }

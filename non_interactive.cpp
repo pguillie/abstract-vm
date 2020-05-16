@@ -37,23 +37,7 @@ static bool read_stdin(std::iostream& ss)
 	return true;
 }
 
-void execution(std::queue<Instruction*> instructions,
-	const std::map<std::string, std::string>& opt)
-{
-	AbstractStack<const IOperand*> stack;
-	bool exited = false;
-
-	while (!instructions.empty()) {
-		if (!exited)
-			exited = execute(*instructions.front(), stack, opt);
-		delete instructions.front();
-		instructions.pop();
-	}
-	if (!exited)
-		throw Exit::Exception();
-}
-
-static bool parsing(const std::string file,
+static bool parse(const std::string file,
 	std::queue<Instruction*>& instructions)
 {
 	Parser parser;
@@ -76,17 +60,39 @@ static bool parsing(const std::string file,
 	return !error;
 }
 
+static void execution(std::queue<Instruction*>& instructions,
+	AbstractStack<const IOperand*>& stack,
+	const std::map<std::string, std::string>& opt,
+	bool proceed)
+{
+
+	while (!instructions.empty()) {
+		if (proceed)
+			proceed = execute(*instructions.front(), stack, opt);
+		delete instructions.front();
+		instructions.pop();
+	}
+	if (proceed)
+		throw Exit::Exception();
+}
+
 int non_interactive(const std::string file,
 	const std::map<std::string, std::string>& opt)
 {
+	AbstractStack<const IOperand*> stack;
 	std::queue<Instruction*> instructions;
+	bool proceed;
 
-	if (!parsing(file, instructions))
-		return 1;
+	proceed = parse(file, instructions);
 	try {
-		execution(instructions, opt);
+		execution(instructions, stack, opt, proceed);
 	} catch (const std::exception& e) {
 		std::cerr << "Error: " << e.what() << std::endl;
+		Exit::clean(stack);
+		while (!instructions.empty()) {
+			delete instructions.front();
+			instructions.pop();
+		}
 		return 1;
 	}
 	return 0;
