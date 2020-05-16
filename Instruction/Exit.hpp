@@ -1,5 +1,5 @@
-#ifndef INSTRUCTIONS_EXIT_H_
-#define INSTRUCTIONS_EXIT_H_
+#ifndef INSTRUCTION_EXIT_H_
+#define INSTRUCTION_EXIT_H_
 
 #include "Instruction.hpp"
 
@@ -29,4 +29,4 @@ public:
 	};
 };
 
-#endif // INSTRUCTIONS_EXIT_H_
+#endif // INSTRUCTION_EXIT_H_

@@ -1,5 +1,5 @@
-#ifndef OPERAND_H_
-#define OPERAND_H_
+#ifndef OPERAND_OPERAND_H_
+#define OPERAND_OPERAND_H_
 
 #include <cstdint>
 #include <cmath>
@@ -48,4 +48,4 @@ private:
 
 #include "Operand.tpp"
 
-#endif // OPERAND_H_
+#endif // OPERAND_OPERAND_H_

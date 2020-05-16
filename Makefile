@@ -1,22 +1,29 @@
 NAME = avm
 
 CXX = clang++
-CXXFLAGS = $(warning) $(version)
+CXXFLAGS = $(include) $(warning) $(version)
+include := -I. -I./include/
 warning := -Wall -Werror -Wextra
 version := -std=c++2a
 
+
 headers =					\
-	avm.hpp					\
-	$(addprefix parser/,			\
+	$(addprefix include/,			\
+		avm.hpp				\
+		AbstractStack.hpp		\
+	)					\
+	$(addprefix Operand/,			\
+		IOperand.hpp			\
+		Operand.hpp			\
+		Operand.tpp			\
+		OperandExceptions.hpp		\
+	)					\
+	$(addprefix Parser/,			\
 		Parser.hpp			\
 		Lexer.hpp			\
 		Token.hpp			\
 	)					\
-	IOperand.hpp				\
-	Operand.tpp				\
-	Operand.hpp				\
-	OperandExceptions.hpp			\
-	$(addprefix instructions/,		\
+	$(addprefix Instruction/,		\
 		Instruction.hpp			\
 		Push.hpp			\
 		Pop.hpp				\
@@ -28,19 +35,23 @@ headers =					\
 	)
 
 sources =					\
-	main.cpp				\
-	invocation.cpp				\
-	interactive.cpp				\
-	non_interactive.cpp			\
-	execute.cpp				\
-	$(addprefix parser/,			\
+	$(addprefix src/,			\
+		main.cpp			\
+		invocation.cpp			\
+		interactive.cpp			\
+		non_interactive.cpp		\
+		execute.cpp			\
+	)					\
+	$(addprefix Operand/,			\
+		OperandFactory.cpp		\
+		OperandExceptions.cpp		\
+	)					\
+	$(addprefix Parser/,			\
 		Parser.cpp			\
 		Lexer.cpp			\
 		Token.cpp			\
 	)					\
-	OperandFactory.cpp			\
-	OperandExceptions.cpp			\
-	$(addprefix instructions/,		\
+	$(addprefix Instruction/,		\
 		Instruction.cpp			\
 		Push.cpp			\
 		Pop.cpp				\

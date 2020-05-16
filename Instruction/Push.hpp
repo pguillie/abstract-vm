@@ -1,11 +1,11 @@
-#ifndef INSTRUCTIONS_PUSH_H_
-#define INSTRUCTIONS_PUSH_H_
+#ifndef INSTRUCTION_PUSH_H_
+#define INSTRUCTION_PUSH_H_
 
 #include <vector>
 
 #include "Instruction.hpp"
-#include "../OperandFactory.hpp"
-#include "../Value.hpp"
+#include "Value.hpp"
+#include "Operand/OperandFactory.hpp"
 
 class Push: public Instruction {
 public:
@@ -24,4 +24,4 @@ private:
 	static const OperandFactory factory;
 };
 
-#endif // INSTRUCTIONS_PUSH_H_
+#endif // INSTRUCTION_PUSH_H_

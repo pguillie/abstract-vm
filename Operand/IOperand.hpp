@@ -1,5 +1,5 @@
-#ifndef IOPERAND_H_
-#define IOPERAND_H_
+#ifndef OPERAND_IOPERAND_H_
+#define OPERAND_IOPERAND_H_
 
 #include <string>
 
@@ -32,4 +32,4 @@ public:
 	virtual const IOperand* operator^(const IOperand& rhs) const =0;
 };
 
-#endif // IOPERAND_H
+#endif // OPERAND_IOPERAND_H

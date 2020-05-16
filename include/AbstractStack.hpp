@@ -1,5 +1,5 @@
-#ifndef ABSTRACTSTACK_H_
-#define ABSTRACTSTACK_H_
+#ifndef INCLUDE_ABSTRACTSTACK_H_
+#define INCLUDE_ABSTRACTSTACK_H_
 
 #include <deque>
 #include <stack>
@@ -80,4 +80,4 @@ auto AbstractStack<T>::crend(void) const
 	return c.crend();
 }
 
-#endif // ABSTRACTSTACK_H_
+#endif // INCLUDE_ABSTRACTSTACK_H_

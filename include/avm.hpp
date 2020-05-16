@@ -1,12 +1,12 @@
-#ifndef AVM_H_
-#define AVM_H_
+#ifndef INCLUDE_AVM_H_
+#define INCLUDE_AVM_H_
 
 #include <map>
 #include <string>
 
-#include "IOperand.hpp"
+#include "Operand/IOperand.hpp"
 #include "AbstractStack.hpp"
-#include "instructions/Instruction.hpp"
+#include "Instruction/Instruction.hpp"
 
 bool invocation(char** av, std::map<std::string, std::string>& opt,
 	std::string& file);
@@ -19,4 +19,4 @@ int non_interactive(const std::string file,
 bool execute(Instruction& instruction, AbstractStack<const IOperand*>& stack,
 	const std::map<std::string, std::string>& opt);
 
-#endif // AVM_H_
+#endif // INCLUDE_AVM_H_

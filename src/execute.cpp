@@ -2,10 +2,10 @@
 
 #include "avm.hpp"
 #include "AbstractStack.hpp"
-#include "IOperand.hpp"
-#include "OperandExceptions.hpp"
-#include "instructions/Instruction.hpp"
-#include "instructions/Exit.hpp"
+#include "Operand/IOperand.hpp"
+#include "Operand/OperandExceptions.hpp"
+#include "Instruction/Instruction.hpp"
+#include "Instruction/Exit.hpp"
 
 bool execute(Instruction& instruction, AbstractStack<const IOperand*>& stack,
 	const std::map<std::string, std::string>& opt)

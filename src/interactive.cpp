@@ -1,8 +1,8 @@
 #include <unistd.h>
 
 #include "avm.hpp"
-#include "parser/Parser.hpp"
-#include "OperandExceptions.hpp"
+#include "Parser/Parser.hpp"
+#include "Operand/OperandExceptions.hpp"
 
 static bool read_stdin(std::iostream& ss)
 {

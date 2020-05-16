@@ -1,10 +1,10 @@
-#ifndef INSTRUCTIONS_ASSERT_H
-#define INSTRUCTIONS_ASSERT_H
+#ifndef INSTRUCTION_ASSERT_H
+#define INSTRUCTION_ASSERT_H
 
 #include <vector>
 
 #include "Instruction.hpp"
-#include "../Value.hpp"
+#include "Value.hpp"
 
 class Assert: public Instruction {
 public:
@@ -42,4 +42,4 @@ private:
 	const std::vector<Value> args;
 };
 
-#endif // INSTRUCTIONS_ASSERT_H
+#endif // INSTRUCTION_ASSERT_H

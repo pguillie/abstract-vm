@@ -1,5 +1,5 @@
-#ifndef PARSER_H_
-#define PARSER_H_
+#ifndef PARSER_PARSER_H_
+#define PARSER_PARSER_H_
 
 #include <iostream>
 #include <fstream>
@@ -12,14 +12,14 @@
 
 #include "Token.hpp"
 #include "Lexer.hpp"
-#include "../Value.hpp"
-#include "../instructions/Push.hpp"
-#include "../instructions/Pop.hpp"
-#include "../instructions/Dump.hpp"
-#include "../instructions/Assert.hpp"
-#include "../instructions/Operation.hpp"
-#include "../instructions/Print.hpp"
-#include "../instructions/Exit.hpp"
+#include "Instruction/Value.hpp"
+#include "Instruction/Push.hpp"
+#include "Instruction/Pop.hpp"
+#include "Instruction/Dump.hpp"
+#include "Instruction/Assert.hpp"
+#include "Instruction/Operation.hpp"
+#include "Instruction/Print.hpp"
+#include "Instruction/Exit.hpp"
 
 class SyntaxErr: public virtual TokErr {
 public:
@@ -91,4 +91,4 @@ private:
 	static std::map<std::string, fptr> instructions;
 };
 
-#endif // PARSER_H_
+#endif // PARSER_PARSER_H_

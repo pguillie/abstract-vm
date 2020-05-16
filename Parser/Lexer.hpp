@@ -1,5 +1,5 @@
-#ifndef LEXER_H_
-#define LEXER_H_
+#ifndef PARSER_LEXER_H_
+#define PARSER_LEXER_H_
 
 #include <iostream>
 #include <sstream>
@@ -41,4 +41,4 @@ private:
 	const int length_;
 };
 
-#endif // LEXER_H_
+#endif // PARSER_LEXER_H_

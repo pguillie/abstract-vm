@@ -1,5 +1,5 @@
-#ifndef OPERAND_EXCEPTIONS_H_
-#define OPERAND_EXCEPTIONS_H_
+#ifndef OPERAND_OPERANDEXCEPTIONS_H_
+#define OPERAND_OPERANDEXCEPTIONS_H_
 
 #include <stdexcept>
 
@@ -47,4 +47,4 @@ public:
 	const char* what(void) const throw();
 };
 
-#endif // OPERAND_EXCEPTIONS_H_
+#endif // OPERAND_OPERANDEXCEPTIONS_H_

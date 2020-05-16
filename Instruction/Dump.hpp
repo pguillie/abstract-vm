@@ -1,5 +1,5 @@
-#ifndef INSTRUCTIONS_DUMP_H
-#define INSTRUCTIONS_DUMP_H
+#ifndef INSTRUCTION_DUMP_H
+#define INSTRUCTION_DUMP_H
 
 #include "Instruction.hpp"
 
@@ -19,4 +19,4 @@ private:
 	const int count;
 };
 
-#endif // INSTRUCTIONS_DUMP_H
+#endif // INSTRUCTION_DUMP_H

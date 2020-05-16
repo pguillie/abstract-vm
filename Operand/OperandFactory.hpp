@@ -1,5 +1,5 @@
-#ifndef OPERANDFACTORY_H_
-#define OPERANDFACTORY_H_
+#ifndef OPERAND_OPERANDFACTORY_H_
+#define OPERAND_OPERANDFACTORY_H_
 
 #include <string>
 
@@ -24,4 +24,4 @@ private:
 	static const fptrCreate createType[5];
 };
 
-#endif // OPERANDFACTORY_H_
+#endif // OPERAND_OPERANDFACTORY_H_

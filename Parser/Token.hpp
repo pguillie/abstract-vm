@@ -1,5 +1,5 @@
-#ifndef TOKEN_H_
-#define TOKEN_H_
+#ifndef PARSER_TOKEN_H_
+#define PARSER_TOKEN_H_
 
 #include <iostream>
 #include <limits>
@@ -48,4 +48,4 @@ private:
 	int length_;
 };
 
-#endif // TOKEN_H_
+#endif // PARSER_TOKEN_H_

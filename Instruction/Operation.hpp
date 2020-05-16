@@ -1,12 +1,11 @@
-#ifndef INSTRUCTIONS_OPERATION_H_
-#define INSTRUCTIONS_OPERATION_H_
+#ifndef INSTRUCTION_OPERATION_H_
+#define INSTRUCTION_OPERATION_H_
 
 #include <vector>
 
 #include "Instruction.hpp"
-#include "../OperandFactory.hpp"
-#include "../Operand.hpp"
-#include "../Value.hpp"
+#include "Value.hpp"
+#include "Operand/OperandFactory.hpp"
 
 class Operation: public Instruction {
 public:
@@ -33,4 +32,4 @@ private:
 	static const OperandFactory factory;
 };
 
-#endif // INSTRUCTIONS_OPERATION_H_
+#endif // INSTRUCTION_OPERATION_H_

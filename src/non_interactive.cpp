@@ -2,8 +2,8 @@
 #include <queue>
 
 #include "avm.hpp"
-#include "parser/Parser.hpp"
-#include "OperandExceptions.hpp"
+#include "Parser/Parser.hpp"
+#include "Operand/OperandExceptions.hpp"
 
 static bool read_file(std::string file, std::iostream& ss)
 {

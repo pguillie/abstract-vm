@@ -1,5 +1,5 @@
-#ifndef INSTRUCTIONS_POP_H_
-#define INSTRUCTIONS_POP_H_
+#ifndef INSTRUCTION_POP_H_
+#define INSTRUCTION_POP_H_
 
 #include "Instruction.hpp"
 
@@ -19,4 +19,4 @@ private:
 	const int count;
 };
 
-#endif // INSTRUCTIONS_POP_H_
+#endif // INSTRUCTION_POP_H_

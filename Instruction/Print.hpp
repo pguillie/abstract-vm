@@ -1,5 +1,5 @@
-#ifndef INSTRUCTIONS_PRINT_H
-#define INSTRUCTIONS_PRINT_H
+#ifndef INSTRUCTION_PRINT_H
+#define INSTRUCTION_PRINT_H
 
 #include "Instruction.hpp"
 
@@ -31,4 +31,4 @@ private:
 	const int count;
 };
 
-#endif // INSTRUCTIONS_PRINT_H
+#endif // INSTRUCTION_PRINT_H
