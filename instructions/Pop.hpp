@@ -5,13 +5,18 @@
 
 class Pop: public Instruction {
 public:
-	Pop(int count = 1);
-	virtual ~Pop(void) { }
+	Pop(void);
+	Pop(const Pop& o) =delete;
+	Pop(Pop&& o) =delete;
+	Pop(int count);
+	virtual ~Pop(void);
+	Pop& operator=(const Pop& o) =delete;
+	Pop& operator=(Pop&& o) =delete;
 
-	void execute(AbstractStack<const IOperand*>&) const;
+	void execute(AbstractStack<const IOperand*>& stack) const;
 
 private:
-	int const count;
+	const int count;
 };
 
 #endif // INSTRUCTIONS_POP_H_

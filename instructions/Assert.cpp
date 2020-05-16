@@ -4,6 +4,9 @@ Assert::Assert(const std::vector<Value>& args):
 	args(args)
 { }
 
+Assert::~Assert(void)
+{ }
+
 static std::string type(eOperandType t)
 {
 	switch (t) {
@@ -15,7 +18,7 @@ static std::string type(eOperandType t)
 	}
 }
 
-void Assert::execute(AbstractStack<const IOperand*> & stack) const
+void Assert::execute(AbstractStack<const IOperand*>& stack) const
 {
 	const IOperand* op;
 	auto it = stack.crbegin();
@@ -49,6 +52,9 @@ void Assert::execute(AbstractStack<const IOperand*> & stack) const
 
 Assert::Exception::Exception(enum Wrong cause):
 	cause(cause)
+{ }
+
+Assert::Exception::~Exception(void)
 { }
 
 const char* Assert::Exception::what() const throw()

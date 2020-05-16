@@ -6,7 +6,10 @@ Push::Push(const std::vector<Value>& args):
 	args(args)
 { }
 
-void Push::execute(AbstractStack<const IOperand*> & stack) const
+Push::~Push(void)
+{ }
+
+void Push::execute(AbstractStack<const IOperand*>& stack) const
 {
 	const IOperand* op;
 

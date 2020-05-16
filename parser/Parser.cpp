@@ -17,6 +17,12 @@ std::map<std::string, fptr> Parser::instructions = {
 	{"xor", &Parser::avm_xor}
 };
 
+Parser::Parser(void)
+{ }
+
+Parser::~Parser(void)
+{ }
+
 Token Parser::assert(Token token, TokType type)
 {
 	if (token.type() != type)
@@ -255,22 +261,25 @@ SyntaxErr::SyntaxErr(int line, int col, int len, TokType expected,
 	message_ = ss.str();
 }
 
-const char* SyntaxErr::what() const throw()
+SyntaxErr::~SyntaxErr(void)
+{ }
+
+const char* SyntaxErr::what(void) const throw()
 {
 	return message_.c_str();
 }
 
-int SyntaxErr::line() const
+int SyntaxErr::line(void) const
 {
 	return line_;
 }
 
-int SyntaxErr::column() const
+int SyntaxErr::column(void) const
 {
 	return column_;
 }
 
-int SyntaxErr::length() const
+int SyntaxErr::length(void) const
 {
 	return length_;
 }

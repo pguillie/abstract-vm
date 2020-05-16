@@ -9,10 +9,15 @@
 
 class Push: public Instruction {
 public:
+	Push(void) =delete;
+	Push(const Push& o) =delete;
+	Push(Push&& o) =delete;
 	Push(const std::vector<Value>&);
-	virtual ~Push(void) { }
+	virtual ~Push(void);
+	Push& operator=(const Push& o) =delete;
+	Push& operator=(Push&& o) =delete;
 
-	void execute(AbstractStack<const IOperand*>&) const;
+	void execute(AbstractStack<const IOperand*>& stack) const;
 
 private:
 	const std::vector<Value> args;

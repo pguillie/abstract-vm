@@ -1,9 +1,12 @@
 #include "Exit.hpp"
 
-Exit::Exit()
+Exit::Exit(void)
 { }
 
-void Exit::execute(AbstractStack<const IOperand*> & stack) const
+Exit::~Exit(void)
+{ }
+
+void Exit::execute(AbstractStack<const IOperand*>& stack) const
 {
 	if (verbose) cout << "[+] exit\n";
 	while (!stack.empty()) {
@@ -13,6 +16,12 @@ void Exit::execute(AbstractStack<const IOperand*> & stack) const
 }
 
 			   // Exceptions //
+
+Exit::Exception::Exception(void)
+{ }
+
+Exit::Exception::~Exception(void)
+{ }
 
 const char* Exit::Exception::what() const throw()
 {

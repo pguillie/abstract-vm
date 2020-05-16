@@ -14,9 +14,13 @@
 template <class N>
 class Operand: public IOperand {
 public:
-	Operand(N value):
-		value(value), str(stringify(value)) { }
-	virtual ~Operand() { }
+	Operand(void) =delete;
+	Operand(const Operand& o) =delete;
+	Operand(Operand&& o) =delete;
+	Operand(N value);
+	virtual ~Operand(void);
+	Operand& operator=(const Operand& o) =delete;
+	Operand& operator=(Operand&& o) =delete;
 
 	int getPrecision(void) const;
 	eOperandType getType(void) const;

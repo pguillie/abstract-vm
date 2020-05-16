@@ -1,7 +1,14 @@
 #include "Print.hpp"
 
+Print::Print(void):
+	count(1)
+{ }
+
 Print::Print(int count):
 	count(count ? count : 1)
+{ }
+
+Print::~Print(void)
 { }
 
 static void print(const IOperand* chr)
@@ -11,7 +18,7 @@ static void print(const IOperand* chr)
 	cout << (char)std::stoi(chr->toString());
 }
 
-void Print::execute(AbstractStack<const IOperand*> & stack) const
+void Print::execute(AbstractStack<const IOperand*>& stack) const
 {
 	unsigned int c = (count < 0) ? -count : count;
 	auto it = stack.cend();
@@ -34,6 +41,12 @@ void Print::execute(AbstractStack<const IOperand*> & stack) const
 }
 
 			   // Exceptions //
+
+Print::TypeException::TypeException(void)
+{ }
+
+Print::TypeException::~TypeException(void)
+{ }
 
 const char* Print::TypeException::what() const throw()
 {

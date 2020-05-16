@@ -1,7 +1,14 @@
 #include "Pop.hpp"
 
+Pop::Pop(void):
+	count(1)
+{ }
+
 Pop::Pop(int count):
 	count(count > 1 ? count : 1)
+{ }
+
+Pop::~Pop(void)
 { }
 
 void Pop::execute(AbstractStack<const IOperand*> & stack) const

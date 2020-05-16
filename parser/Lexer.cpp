@@ -106,6 +106,9 @@ LexicalErr::LexicalErr(int line, int col, int len, std::string str):
 	message_ = ss.str();
 }
 
+LexicalErr::~LexicalErr(void)
+{ }
+
 const char* LexicalErr::what() const throw()
 {
 	return message_.c_str();

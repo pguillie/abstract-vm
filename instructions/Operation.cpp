@@ -7,6 +7,9 @@ Operation::Operation(enum Type op, const std::vector<Value>& args):
 	args(args)
 { }
 
+Operation::~Operation(void)
+{ }
+
 static std::string OpeName(Operation::Type op)
 {
 	switch (op) {
@@ -43,7 +46,7 @@ Instruction::StackOutOfRange error(Operation::Type op)
 	return Instruction::StackOutOfRange(os.str().c_str());
 }
 
-void Operation::calc(AbstractStack<const IOperand*> & stack,
+void Operation::calc(AbstractStack<const IOperand*>& stack,
 	const IOperand* rhs) const
 {
 	const IOperand* lhs;
@@ -70,7 +73,7 @@ void Operation::calc(AbstractStack<const IOperand*> & stack,
 	delete rhs;
 }
 
-void Operation::execute(AbstractStack<const IOperand*> & stack) const
+void Operation::execute(AbstractStack<const IOperand*>& stack) const
 {
 	const IOperand* rhs;
 

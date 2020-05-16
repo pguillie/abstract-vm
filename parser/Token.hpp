@@ -15,22 +15,24 @@ enum class TokType {
 class TokErr: public virtual std::exception {
 public:
 	virtual ~TokErr(void) { }
+
 	virtual const char* what(void) const throw() =0;
-	virtual int line() const =0;
-	virtual int column() const =0;
-	virtual int length() const =0;
+	virtual int line(void) const =0;
+	virtual int column(void) const =0;
+	virtual int length(void) const =0;
 };
 
 // A Token is the association of a portion of the source code with a type.
 class Token {
 public:
-	Token(void) =default;
-	Token(enum TokType type, int index, int length = 1);
-	virtual ~Token(void) { };
-	// Token(const Token& copy);
-	// Token & operator=(const Token& copy);
-	// Token(Token&& move) =delete;
-	// Token & operator=(Token&& copy) =delete;
+	Token(void);
+	Token(const Token& o);
+	Token(Token&& o);
+	Token(enum TokType type, int index);
+	Token(enum TokType type, int index, int length);
+	virtual ~Token(void);
+	Token& operator=(const Token& o);
+	Token& operator=(Token&& o);
 
 	enum TokType type(void) const;
 	int index(void) const;

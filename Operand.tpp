@@ -2,6 +2,15 @@ template <class N>
 const OperandFactory Operand<N>::factory;
 
 template <class N>
+Operand<N>::Operand(N value):
+	value(value), str(stringify(value))
+{ }
+
+template <class N>
+Operand<N>::~Operand(void)
+{ }
+
+template <class N>
 std::string Operand<N>::stringify(N value)
 {
 	std::ostringstream os;

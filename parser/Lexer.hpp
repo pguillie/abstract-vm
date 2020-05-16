@@ -21,13 +21,18 @@ namespace Lexer {
 
 class LexicalErr: public virtual TokErr {
 public:
+	LexicalErr(void) =delete;
+	LexicalErr(const LexicalErr& o) =delete;
+	LexicalErr(LexicalErr&& o) =delete;
 	LexicalErr(int line, int column, int length, std::string lexeme);
-	virtual ~LexicalErr(void) { }
+	virtual ~LexicalErr(void);
+	LexicalErr& operator=(const LexicalErr& o) =delete;
+	LexicalErr& operator=(LexicalErr&& o) =delete;
 
 	const char* what(void) const throw();
-	int line() const;
-	int column() const;
-	int length() const;
+	int line(void) const;
+	int column(void) const;
+	int length(void) const;
 
 private:
 	std::string message_;

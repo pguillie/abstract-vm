@@ -1,25 +1,34 @@
 #include "OperandExceptions.hpp"
 
-OperandOverflow::OperandOverflow():
+OperandOverflow::OperandOverflow(void):
 	std::overflow_error("overflow error")
 { }
 
-const char* OperandOverflow::what() const throw()
+OperandOverflow::~OperandOverflow(void)
+{ }
+
+const char* OperandOverflow::what(void) const throw()
 {
 	return std::overflow_error::what();
 }
 
-OperandUnderflow::OperandUnderflow():
+OperandUnderflow::OperandUnderflow(void):
 	std::underflow_error("underflow error")
 { }
 
-const char* OperandUnderflow::what() const throw()
+OperandUnderflow::~OperandUnderflow(void)
+{ }
+
+const char* OperandUnderflow::what(void) const throw()
 {
 	return std::underflow_error::what();
 }
 
 OperandDomainError::OperandDomainError(const std::string& what_arg):
 	std::domain_error(what_arg)
+{ }
+
+OperandDomainError::~OperandDomainError(void)
 { }
 
 const char* OperandDomainError::what() const throw()
