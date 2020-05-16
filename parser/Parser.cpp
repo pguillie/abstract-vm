@@ -61,7 +61,7 @@ Instruction* Parser::instruction()
 	assert(t, TokType::instruction);
 	lexeme = source_.str().substr(t.index(), t.length());
 	if (instructions.find(lexeme) == instructions.end())
-		throw std::out_of_range("Error: unknown instruction.");
+		throw std::out_of_range("Error: unknown instruction");
 	return (this->*instructions.at(lexeme))();
 }
 

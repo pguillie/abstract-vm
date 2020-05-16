@@ -30,5 +30,5 @@ Exit::Exception::~Exception(void)
 
 const char* Exit::Exception::what() const throw()
 {
-	return "no exit instruction.";
+	return "no exit instruction";
 }

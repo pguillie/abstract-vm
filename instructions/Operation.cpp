@@ -42,7 +42,7 @@ Instruction::StackOutOfRange error(Operation::Type op)
 {
 	std::ostringstream os;
 
-	os << OpeName(op) << ": no operand left on stack.";
+	os << OpeName(op) << ": no operand left on stack";
 	return Instruction::StackOutOfRange(os.str().c_str());
 }
 

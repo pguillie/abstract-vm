@@ -50,5 +50,5 @@ Print::TypeException::~TypeException(void)
 
 const char* Print::TypeException::what() const throw()
 {
-	return "print: operand is not a character.";
+	return "print: operand is not a character";
 }

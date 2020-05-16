@@ -28,7 +28,7 @@ void Assert::execute(AbstractStack<const IOperand*>& stack) const
 	for (const Value& val : args) {
 		if (it == stack.crend())
 			throw Instruction::StackOutOfRange("assert:"
-				" no operand left on stack.");
+				" no operand left on stack");
 		op = *it;
 		if (verbose) {
 			cout << "... " << val.value << " " << type(val.type)
@@ -61,10 +61,10 @@ const char* Assert::Exception::what() const throw()
 {
 	switch (cause) {
 	case Wrong::type:
-		return "Assertion error: the operands have different types.";
+		return "Assertion error: the operands have different types";
 	case Wrong::value:
-		return "Assertion error: the operands have different values.";
+		return "Assertion error: the operands have different values";
 	default:
-		return "Assertion error.";
+		return "Assertion error";
 	}
 }
