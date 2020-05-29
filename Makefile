@@ -4,7 +4,7 @@ CXX = clang++
 CXXFLAGS = $(include) $(warning) $(version)
 include := -I. -I./include/
 warning := -Wall -Werror -Wextra
-version := -std=c++2a
+version := -std=c++17
 
 
 headers =					\

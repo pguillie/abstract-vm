@@ -66,7 +66,7 @@ void Operation::calc(AbstractStack<const IOperand*>& stack,
 		: (op == Type::bw_or) ? *lhs | *rhs
 		: *lhs ^ *rhs;
 	if (verbose)
-		cout << "..+-> " << lhs->toString() << OpeSymb(op)
+		cout << "..`-> " << lhs->toString() << OpeSymb(op)
 		     << rhs->toString() << " = " << stack.top()->toString()
 		     << std::endl;
 	delete lhs;
@@ -95,7 +95,7 @@ void Operation::execute(AbstractStack<const IOperand*>& stack) const
 				throw error(op);
 			rhs = stack.top();
 			stack.pop();
-			loc = "statck";
+			loc = "stack";
 		}
 		if (verbose)
 			cout << "..| retrieve 'rhs' from " << loc << ": "
